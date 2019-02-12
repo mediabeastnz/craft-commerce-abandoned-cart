@@ -1,0 +1,52 @@
+{% extends "_layouts/cp" %}
+
+{% set title = "Dashboard" %}
+
+{% set selectedSubnavItem = 'dashboard' %}
+
+{# The URL to this plugin's base CP section #}
+{% set pluginCpUrl = url('abandoned-cart') %}
+
+{# The content of the CP Section#}
+{% set content %}
+
+    {% if carts | length %}
+
+        {% set abandonedCarts = carts.all() %}
+
+        <table id="carts" class="data fullwidth collapsible">
+            <thead>
+                <th scope="col">{{ "Cart" | t('app') }}</th>
+                <th scope="col">{{ "Customer/Guest" | t('app') }}</th>
+                <th scope="col">{{ "Total" | t('app') }}</th>
+                <th scope="col">{{ "Items" | t('app') }}</th>
+                <th scope="col">{{ "Last Update" | t('app') }}</th>
+                <th scope="col">{{ "Next Reminder" | t('app') }}</th>
+            </thead>
+            <tbody>
+                {% for cart in abandonedCarts %}
+                    <tr data-id="{{ cart.id }}" data-name="{{ cart.reference | t('site') }}">
+                        <th scope="row" data-title="{{ 'Order' | t('app') }}">
+                            <a class="nav-anchor" href="{{ url('commerce/orders/' ~ cart.id) }}">{{ "View" | t('app') }}</a>
+                        </th>
+                        <td scope="row" data-title="{{ 'Customer' | t('app') }}" class="">
+                            {% if cart.customer.userId|length %}
+                                <a class="nav-anchor" href="{{ url('admin/users/' ~ cart.customer.id) }}">{{ cart.email }}</a>
+                            {% else %}
+                                {{ cart.email }}
+                            {% endif %}
+                        </td>
+                        <td scope="row" data-title="{{ 'Total' | t('app') }}" class="">{{ cart.totalPrice|commerceCurrency(cart.currency) }}</td>
+                        <td scope="row" data-title="{{ 'Items' | t('app') }}" class="">{{ cart.lineitems|length }}</td>
+                        <td scope="row" data-title="{{ 'Last Update' | t('app') }}" class="">{{ cart.dateUpdated|datetime }}</td>
+                        <td scope="row" data-title="{{ 'Next Reminder' | t('app') }}" class="">1/2 in 4 hours</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    {% else %}
+        <p class="textline">No abandoned carts have been found, they'll automatically appear once found.</p>
+    {% endif %}
+
+{% endset %}

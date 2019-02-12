@@ -1,0 +1,55 @@
+{% extends "_layouts/cp" %}
+{% import '_includes/forms' as forms %}
+
+{% set crumbs = [
+    { label: craft.navigation.getPluginName(), url: url('abandoned-cart/settings') },
+    { label: 'Settings' | t('app'), url: url('abandoned-cart/settings') }
+] %}
+
+{% set selectedSubnavItem = 'settings' %}
+
+{% set fullPageForm = true %}
+
+{% set content %}
+
+<input type="hidden" name="action" value="plugins/save-plugin-settings">
+<input type="hidden" name="pluginHandle" value="abandoned-cart">
+
+{% namespace 'settings' %}
+
+{{ forms.textField({
+    first: true,
+    label: "Plugin Name",
+    name: 'pluginName',
+    value: settings.pluginName
+}) }}
+
+{{ forms.textField({
+    label: "First Reinder Delay",
+    name: 'firstReminderDelay',
+    value: settings.firstReminderDelay,
+    instructions: 'Set when the first remind will be sent in hours e.g. 12'
+}) }}
+
+{{ forms.textField({
+    label: "Second Reminder Delay",
+    name: 'secondReminderDelay',
+    value: settings.secondReminderDelay,
+    instructions: 'Set when the second remind will be sent in hours e.g. 24'
+}) }}
+
+{{ forms.textField({
+    label: "First Reminder Template",
+    name: 'firstReminderTemplate',
+    value: settings.firstReminderTemplate
+}) }}
+
+{{ forms.textField({
+    label: "Second Reminder Template",
+    name: 'secondReminderTemplate',
+    value: settings.secondReminderTemplate
+}) }}
+
+{% endnamespace %}
+
+{% endset %}
