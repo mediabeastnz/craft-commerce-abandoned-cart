@@ -30,8 +30,10 @@ class Install extends Migration
                 'id' => $this->primaryKey(),
                 'orderId' => $this->integer()->notNull(),
                 'email' => $this->string()->notNull()->defaultValue(''),
+                'isScheduled' => $this->boolean()->defaultValue(false),
                 'firstReminder' => $this->boolean()->defaultValue(false),
                 'secondReminder' => $this->boolean()->defaultValue(false),
+                'isRecovered' => $this->boolean()->defaultValue(false),
                 'dateCreated' => $this->dateTime()->notNull(),
                 'dateUpdated' => $this->dateTime()->notNull(),
                 'uid' => $this->uid()

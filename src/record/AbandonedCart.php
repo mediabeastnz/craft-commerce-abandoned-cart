@@ -8,6 +8,7 @@ use yii\db\ActiveQueryInterface;
 
 class AbandonedCart extends ActiveRecord
 {
+
     // Public Methods
     // =========================================================================
 
@@ -16,8 +17,8 @@ class AbandonedCart extends ActiveRecord
         return '{{%abandonedcart_carts}}';
     }
 
-    public function getOrder(): ActiveQueryInterface
+    public function getOrder(): array
     {
-        return $this->hasOne(Order::class, ['id' => 'orderId']);
+        return Order::findAll($this->orderId);
     }
 }

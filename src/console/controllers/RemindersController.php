@@ -23,7 +23,7 @@ class RemindersController extends Controller
     // Properties
     // =========================================================================
     
-    public $defaultAction = 'sendEmails';
+    public $defaultAction = 'scheduleEmails';
 
     // Public Methods
     // =========================================================================
@@ -43,7 +43,7 @@ class RemindersController extends Controller
      *
      * @return int
      */
-    public function actionSendEmails()
+    public function actionScheduleEmails()
     {
         // $this->confirm('Are you sure?');
         $res = AbandonedCart::$plugin->carts->getEmailsToSend();

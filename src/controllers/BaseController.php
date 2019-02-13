@@ -28,7 +28,7 @@ class BaseController extends Controller
 
     public function actionIndex()
     {
-        $carts = false;
+        $carts = AbandonedCart::$plugin->carts->getAbandonedCarts();
         return $this->renderTemplate('abandoned-cart/index', array(
             'carts' => $carts
         ));

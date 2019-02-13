@@ -10,43 +10,73 @@
 {# The content of the CP Section#}
 {% set content %}
 
+    <div class="field">
+        <div class="heading">
+            <h2>{{ "Abandoned Carts"|t('app') }}</h2>
+            <div class="instructions">
+                <p>Abandoned carts will be updated every few minutes. 
+                If a new cart is found it will be marked as scheduled and added to the queue.<br />
+                Items in the queue will be scheduled as per the delay times in settings.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div id="no-carts"{% if carts|length %} class="hidden"{% endif %}>
+        <p>{{ "No carts exist yet."|t('app') }}</p>
+    </div>
+
     {% if carts | length %}
 
-        {% set abandonedCarts = carts.all() %}
+        {% set abandonedCarts = carts %}
 
         <table id="carts" class="data fullwidth collapsible">
             <thead>
                 <th scope="col">{{ "Cart" | t('app') }}</th>
                 <th scope="col">{{ "Customer/Guest" | t('app') }}</th>
                 <th scope="col">{{ "Total" | t('app') }}</th>
-                <th scope="col">{{ "Items" | t('app') }}</th>
-                <th scope="col">{{ "Last Update" | t('app') }}</th>
-                <th scope="col">{{ "Next Reminder" | t('app') }}</th>
+                {# <th scope="col">{{ "Items" | t('app') }}</th> #}
+                <th scope="col">{{ "Order Updated" | t('app') }}</th>
+                <th scope="col">{{ "1st Reminder" | t('app') }}</th>
+                <th scope="col">{{ "2nd Reminder" | t('app') }}</th>
+                <th scope="col">{{ "Status" | t('app') }}</th>
             </thead>
             <tbody>
                 {% for cart in abandonedCarts %}
-                    <tr data-id="{{ cart.id }}" data-name="{{ cart.reference | t('site') }}">
+                    <tr data-id="{{ cart.id }}" data-name="{{ cart.order[0].reference | t('site') }}">
                         <th scope="row" data-title="{{ 'Order' | t('app') }}">
-                            <a class="nav-anchor" href="{{ url('commerce/orders/' ~ cart.id) }}">{{ "View" | t('app') }}</a>
+                            <a class="nav-anchor" href="{{ url('commerce/orders/' ~ cart.order[0].id) }}">{{ "View" | t('app') }}</a>
                         </th>
                         <td scope="row" data-title="{{ 'Customer' | t('app') }}" class="">
-                            {% if cart.customer.userId|length %}
-                                <a class="nav-anchor" href="{{ url('admin/users/' ~ cart.customer.id) }}">{{ cart.email }}</a>
+                            {% if cart.order[0].customer.userId|length %}
+                                <a class="nav-anchor" href="{{ url('admin/users/' ~ cart.order[0].customer.id) }}">{{ cart.email }}</a>
                             {% else %}
                                 {{ cart.email }}
                             {% endif %}
                         </td>
-                        <td scope="row" data-title="{{ 'Total' | t('app') }}" class="">{{ cart.totalPrice|commerceCurrency(cart.currency) }}</td>
-                        <td scope="row" data-title="{{ 'Items' | t('app') }}" class="">{{ cart.lineitems|length }}</td>
-                        <td scope="row" data-title="{{ 'Last Update' | t('app') }}" class="">{{ cart.dateUpdated|datetime }}</td>
-                        <td scope="row" data-title="{{ 'Next Reminder' | t('app') }}" class="">1/2 in 4 hours</td>
+                        <td scope="row" data-title="{{ 'Total' | t('app') }}" class="">{{ cart.order[0].totalPrice|commerceCurrency(cart.order[0].currency) }}</td>
+                        {# <td scope="row" data-title="{{ 'Items' | t('app') }}" class="">{{ cart.order[0].lineitems|length }}</td> #}
+                        <td scope="row" data-title="{{ 'Last Update' | t('app') }}" class="">{{ cart.order[0].dateUpdated.diff(now)|duration(false) }} ago</td>
+                        <td scope="row" data-title="{{ '1st Reminder' | t('app') }}" class="">
+                            {{ cart.prettyFirstReminder }}
+                        </td>
+                        <td scope="row" data-title="{{ '2nd Reminder' | t('app') }}" class="">
+                            {{ cart.prettySecondReminder }}
+                        </td>
+                        <td scope="row" data-title="{{ 'Status' | t('app') }}" class="">
+                            {% if cart.isRecovered %}
+                                <div class="status green"></div>
+                            {% elseif cart.isScheduled %}
+                                <div class="status orange"></div>
+                            {% else %}
+                                <div class="status blue"></div>
+                            {% endif %}
+                            {{ cart.status }}
+                        </td>
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
-
-    {% else %}
-        <p class="textline">No abandoned carts have been found, they'll automatically appear once found.</p>
     {% endif %}
 
 {% endset %}

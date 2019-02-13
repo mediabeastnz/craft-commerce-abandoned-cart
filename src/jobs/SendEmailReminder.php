@@ -12,19 +12,62 @@ use mediabeastnz\abandonedcart\AbandonedCart;
 
 class SendEmailReminder extends BaseJob
 {
-    public function execute($queue)
-    {
-        $totalSteps = 10;
-        for ($step = 0; $step < $totalSteps; $step++) { 
-            return true;
-            $this->setProgress($queue, $step / $totalSteps);
-            // do something...
-        }
-        
-    }
+    // Properties
+    // =========================================================================
+
+    /**
+     * @var int
+     */
+    public $cartId;
+
+    /**
+     * @var int
+     */
+    public $reminder;
 
     protected function defaultDescription()
     {
-        return Craft::t('abandoned-cart', 'Sending abandoned cart reminders');
+        return Craft::t('abandoned-cart', 'Send abandoned cart reminder');
+    }
+
+
+    // Public Methods
+    // =========================================================================
+
+    public function execute($queue)
+    {
+        $totalSteps = 1;
+        for ($step = 0; $step < $totalSteps; $step++) { 
+              
+            $cart = AbandonedCart::$plugin->carts->getAbandonedCartById($this->cartId);
+            
+            if ($cart) {
+
+                $html = "<html><body><p>Your order stuff goes here...</p></body></html>";
+                
+                if ($this->reminder == 1) {
+                    // do 1st reminder stuff
+                    $cart->firstReminder = 1;
+                    $cart->isScheduled = 0;
+                    $cart->save($cart);
+
+                    AbandonedCart::$plugin->carts->sendMail($html, "Your cart is waiting...#1", $cart->email);
+
+                }
+
+                if ($this->reminder == 2) {
+                    // do 2nd reminder stuff
+                    $cart->secondReminder = 2;
+                    $cart->isScheduled = 0;
+                    $cart->save($cart);
+                    
+                    AbandonedCart::$plugin->carts->sendMail($html, "Your cart is waiting...#2", $cart->email);
+
+                }
+
+            }
+
+            $this->setProgress($queue, $step / $totalSteps);
+        }
     }
 }
