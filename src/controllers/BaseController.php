@@ -9,6 +9,7 @@ use craft\web\Controller;
 use craft\helpers\UrlHelper;
 use craft\commerce\elements\Order;
 
+
 use yii\web\Response;
 
 class BaseController extends Controller
@@ -33,10 +34,6 @@ class BaseController extends Controller
 
     public function actionIndex()
     {
-
-        $orders = AbandonedCart::$plugin->carts->getAbandonedOrders($start = 'PT1H', $end = 'PT24H');
-        // echo '<pre>'; print_r($orders->count()); echo '</pre>'; die();
-
         $carts = AbandonedCart::$plugin->carts->getAbandonedCarts();
         return $this->renderTemplate('abandoned-cart/index', array(
             'carts' => $carts

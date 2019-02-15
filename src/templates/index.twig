@@ -35,7 +35,6 @@
                 <th scope="col">{{ "Cart" | t('app') }}</th>
                 <th scope="col">{{ "Customer/Guest" | t('app') }}</th>
                 <th scope="col">{{ "Total" | t('app') }}</th>
-                <th scope="col">{{ "Order Updated" | t('app') }}</th>
                 <th scope="col">{{ "1st Reminder" | t('app') }}</th>
                 <th scope="col">{{ "2nd Reminder" | t('app') }}</th>
                 <th scope="col">{{ "Clicked" | t('app') }}</th>
@@ -55,11 +54,20 @@
                             {% endif %}
                         </td>
                         <td scope="row" data-title="{{ 'Total' | t('app') }}" class="">{{ cart.order[0].totalPrice|commerceCurrency(cart.order[0].currency) }}</td>
-                        <td scope="row" data-title="{{ 'Last Update' | t('app') }}" class="">{{ cart.order[0].dateUpdated.diff(now)|duration(false) }} ago</td>
                         <td scope="row" data-title="{{ '1st Reminder' | t('app') }}" class="">
+                            {% if cart.firstReminder %}
+                                <div class="status green"></div>
+                            {% else %}
+                                <div class="status orange"></div>
+                            {% endif %}
                             {{ cart.prettyFirstReminder }}
                         </td>
                         <td scope="row" data-title="{{ '2nd Reminder' | t('app') }}" class="">
+                            {% if cart.secondReminder %}
+                                <div class="status green"></div>
+                            {% else %}
+                                <div class="status orange"></div>
+                            {% endif %}
                             {{ cart.prettySecondReminder }}
                         </td>
                         <td scope="row" data-title="{{ 'Clicked' | t('app') }}" class="">
@@ -71,7 +79,9 @@
                             {{ cart.prettyClicked }}
                         </td>
                         <td scope="row" data-title="{{ 'Status' | t('app') }}" class="">
+                            
                             {% set status = cart.status %}
+                            
                             {% if cart.isRecovered and status != 'Expired' %}
                                 <div class="status green"></div>
                             {% elseif cart.isScheduled and status != 'Expired' %}
@@ -81,6 +91,7 @@
                             {% else %}
                                 <div class="status red"></div>
                             {% endif %}
+                           
                             {{ status }}
                         </td>
                     </tr>

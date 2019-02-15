@@ -88,7 +88,7 @@ class AbandonedCart extends Model
 
             // if time hasn't expired - yay
             if ($nowTimestamp < $expiredTimestamp) {
-                return "Expiring";
+                return "Sent";
             }
 
             return "Expired";

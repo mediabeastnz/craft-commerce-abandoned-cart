@@ -14,6 +14,8 @@ class Settings extends Model
 
     public $secondReminderDelay = '12';
 
+    public $discountCode = "";
+
     public $firstReminderTemplate = 'abandoned-cart/emails/first';
 
     public $secondReminderTemplate = 'abandoned-cart/emails/second';

@@ -84,7 +84,8 @@ class Carts extends Component
 
     public function createNewCarts(\craft\commerce\elements\db\OrderQuery $orders)
     {
-        if ($orders && $orders->count() > 0) {
+        $orders = $orders->all();
+        if ($orders && count($orders) > 0) {
             foreach ($orders as $order) {
                 // check for existing cart first
                 // if none exist - create a new record
@@ -102,30 +103,19 @@ class Carts extends Component
     }
     
     // Get all abandoned commerce orders that have been inactive for more than 1hr
+    // But no further back than 12 hours
     // Note: Commerce::purgeInactiveCartsDuration() may come into play here.
-    public function getAbandonedOrders($start = 'PT3H', $end = 'PT24H')
-    {
-        $now = new \DateTime();
-        $nowInt = new \DateInterval($start);
-        $nowInt->invert = 0;
-        $now->add($nowInt);
-        $now = $now->format('Y-m-d H:i:s');
-        
-        $then = new \DateTime();
-        $thenInt = new \DateInterval($end);
-        $thenInt->invert = 0;
-        $then->add($thenInt);
-        $then = $then->format('Y-m-d H:i:s');
-        
+    public function getAbandonedOrders($start = '1', $end = '12')
+    {        
         // Find orders that fit the criteria
         $carts = Order::find();
-        $carts->where(['between', 'commerce_orders.dateUpdated', $now, $then]);
+        $carts->where('commerce_orders.dateUpdated <= DATE_ADD(NOW(), INTERVAL - '.$start.' HOUR)');
+        $carts->andWhere('commerce_orders.dateUpdated >= DATE_ADD(NOW(), INTERVAL - '.$end.' HOUR)');
         $carts->andWhere('totalPrice > 0');
         $carts->andWhere('isCompleted = 0');
         $carts->andWhere('email IS NOT NULL');
         $carts->orderBy('commerce_orders.dateUpdated desc');
         $carts->all();
-
         return $carts;
     }
 
@@ -174,16 +164,17 @@ class Carts extends Component
         $view = Craft::$app->getView();
         $oldTemplateMode = $view->getTemplateMode();
         $originalLanguage = Craft::$app->language;
-        $view->setTemplateMode($view::TEMPLATE_MODE_CP);
-        // $oldTemplatesPath = $view->getTemplatesPath();
-        // $view->setTemplatesPath(AbandonedCart::$plugin->getInstance()->getBasePath());
-        // $html = $view->renderTemplate('/emails');
-        // $view->setTemplatesPath($oldTemplatesPath);
+
+        if (strpos($templatePath, "abandoned-cart/emails") !== false) { 
+            $view->setTemplateMode($view::TEMPLATE_MODE_CP);
+        } else {
+            $view->setTemplateMode($view::TEMPLATE_MODE_SITE);
+        }
 
         // get the order from the cart
         $order = Order::findOne($cart->orderId);
 
-        if(!$order) {
+        if (!$order) {
             $error = Craft::t('app', 'Could not find Order for Abandoned Cart email.');
             Craft::error($error, __METHOD__);
             Craft::$app->language = $originalLanguage;
@@ -191,11 +182,21 @@ class Carts extends Component
             return false;
         }
 
+        $checkoutLink = 'abandoned-cart-restore?number=' . $order->number;
+
+        $discount = AbandonedCart::$plugin->getSettings()->discountCode;
+        if ($discount) {
+            $discountCode = $discount;
+            $checkoutLink = $checkoutLink . '&couponCode=' . $discountCode;
+        } else {
+            $discountCode = false;
+        }
+
         // template variables
         $renderVariables = [
             'order' => $order,
-            'discount' => false, // feature coming soon ;)
-            'checkoutLink' => 'abandoned-cart-restore?number=' . $order->number
+            'discount' => $discountCode,
+            'checkoutLink' => $checkoutLink
         ];
 
         $templatePath = $view->renderString($templatePath, $renderVariables);

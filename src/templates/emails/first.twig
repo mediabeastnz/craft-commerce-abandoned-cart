@@ -191,6 +191,9 @@
                 text-align: center;
                 font-size: 15px;
             }
+            .discount_code {
+                color: #22BC66;
+            }
             /* Social Icons ------------------------------ */
             .social {
                 width: auto;
@@ -360,21 +363,21 @@
                                             <h1>Hi there,</h1>
                                             <p>It looks like you left some items in your cart, avoid missing out by completing your order.</p>
                                             {% if discount %}
+                                            {% set discountDetails = craft.commerce.discounts.discountByCode(discount) %}
                                             <!-- Discount/Incentive -->
                                             <table align="center" cellpadding="0" cellspacing="0" class="discount" width="100%">
                                                 <tr>
                                                     <td align="center">
-                                                        <h1 class="discount_heading">10% OFF</h1>
-                                                        <p class="discount_body">Complete your order now to secure 10% off.</p>
-                                                        <!-- Border based button
-                                                                               https://litmus.com/blog/a-guide-to-bulletproof-buttons-in-email-design -->
+                                                        <h1 class="discount_heading">{{ discountDetails.name }}</h1>
+                                                        <p class="discount_body">{{ discountDetails.description }}</p>
+                                                        <!-- Border based button https://litmus.com/blog/a-guide-to-bulletproof-buttons-in-email-design -->
                                                         <table border="0" cellpadding="0" cellspacing="0" width="100%">
                                                             <tr>
                                                                 <td align="center">
                                                                     <table border="0" cellpadding="0" cellspacing="0">
                                                                         <tr>
                                                                             <td>
-                                                                                <a href="{{ siteUrl ~ checkoutLink }}" class="button button--green" target="_blank">Complete my order</a>
+                                                                                <h1 class="discount_code">{{ discountDetails.code }}</h1>
                                                                             </td>
                                                                         </tr>
                                                                     </table>

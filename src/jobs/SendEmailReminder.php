@@ -64,7 +64,7 @@ class SendEmailReminder extends BaseJob
 
                 // Second Reminder
                 if ($this->reminder == 2) {
-                    $cart->secondReminder = 2;
+                    $cart->secondReminder = 1;
                     $cart->isScheduled = 0;
                     $cart->save($cart);
                     
