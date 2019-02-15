@@ -7,9 +7,9 @@ use mediabeastnz\abandonedcart\jobs\SendEmailReminder;
 use mediabeastnz\abandonedcart\AbandonedCart;
 
 use Craft;
-use craft\commerce\elements\Order;
 use craft\db\Query;
 use craft\mail\Message;
+use craft\commerce\elements\Order;
 
 use yii\base\Component;
 
@@ -21,29 +21,17 @@ class Carts extends Component
 
     public function getEmailsToSend()
     {
-        // At the time of this action being triggered, query the database for any
-        // orders that meet the criteria e.g. inactive for 1hr.
-        // Once the orders have been found we check to see if they've already been
-        // added to the abandonedcart_carts table and if so a few additional checks
-        // need to happen.
-
-        /*
-         * 1. get all orders that meet the criteria
-         * 2. check if orders are already in abandonedcart_carts
-         * 3. if so - update columns as a max of 2 emails can be sent e.g. 1hr + 24hr
-         * 4. if both have been triggered then skip it
-         * 5. if not - then add it to the table and set the first column with 1
-        */
-
+        // get abandoned carts
         $carts = $this->getAbandonedOrders();
-
-        $this->createNewCarts($carts);
-
+        // create any new carts
+        if($carts->count() > 0) {
+            $this->createNewCarts($carts);
+        }
+        // return carts total
         if ($totalScheduled = $this->scheduleReminders()) {
             return $totalScheduled;
         }
-
-        return false;
+        return 0;
     }
 
     public function scheduleReminders()
@@ -60,7 +48,7 @@ class Carts extends Component
                 // and then push it to the queue based on $firstReminderDelay setting
                 if ($cart->firstReminder == 0) {
 
-                    Craft::$app->queue->delay(1 * 60)->push(new SendEmailReminder([
+                    Craft::$app->queue->delay(10)->push(new SendEmailReminder([
                         'cartId' => $cart->id, 
                         'reminder' => 1
                     ]));
@@ -74,7 +62,7 @@ class Carts extends Component
                 // and then push it to the queue based on $secondReminderDelay setting
                 } elseif ($cart->secondReminder == 0) {
 
-                    Craft::$app->queue->delay(3 * 60)->push(new SendEmailReminder([
+                    Craft::$app->queue->delay(10)->push(new SendEmailReminder([
                         'cartId' => $cart->id, 
                         'reminder' => 2
                     ]));
@@ -115,26 +103,26 @@ class Carts extends Component
     
     // Get all abandoned commerce orders that have been inactive for more than 1hr
     // Note: Commerce::purgeInactiveCartsDuration() may come into play here.
-    public function getAbandonedOrders($start = 'PT1H', $end = 'PT24H')
+    public function getAbandonedOrders($start = 'PT3H', $end = 'PT24H')
     {
         $now = new \DateTime();
         $nowInt = new \DateInterval($start);
-        $nowInt->invert = 1;
+        $nowInt->invert = 0;
         $now->add($nowInt);
         $now = $now->format('Y-m-d H:i:s');
-
+        
         $then = new \DateTime();
         $thenInt = new \DateInterval($end);
-        $thenInt->invert = 1;
+        $thenInt->invert = 0;
         $then->add($thenInt);
         $then = $then->format('Y-m-d H:i:s');
         
         // Find orders that fit the criteria
         $carts = Order::find();
-        $carts->where(['between', 'commerce_orders.dateUpdated', $then, $now]);
+        $carts->where(['between', 'commerce_orders.dateUpdated', $now, $then]);
         $carts->andWhere('totalPrice > 0');
-        $carts->isCompleted(false);
-        $carts->email(':notempty:');
+        $carts->andWhere('isCompleted = 0');
+        $carts->andWhere('email IS NOT NULL');
         $carts->orderBy('commerce_orders.dateUpdated desc');
         $carts->all();
 
@@ -165,27 +153,117 @@ class Carts extends Component
         return $row ? new CartModel($row) : null;
     }
 
-    public function sendMail($html, $subject, $recipient = null, array $attachments = array()): bool
+    public function getAbandonedCartByOrderId(int $id)
     {
-        $settings = Craft::$app->systemSettings->getSettings('email');
-        $message = new Message();
+        $row = $this->_createAbandonedCartsQuery()
+            ->where(['orderId' => $id])
+            ->one();
 
-        $message->setFrom([$settings['fromEmail'] => $settings['fromName']]);
-        $message->setTo($recipient);
-        $message->setSubject($subject);
-        $message->setHtmlBody($html);
-        if (!empty($attachments) && \is_array($attachments)) {
+        return $row ? new CartModel($row) : null;
+    }
 
-            foreach ($attachments as $fileId) {
-                if ($file = Craft::$app->assets->getAssetById((int)$fileId)) {
-                    $message->attach($this->getFolderPath() . '/' . $file->filename, array(
-                        'fileName' => $file->title . '.' . $file->getExtension()
-                    ));
-                }
-            }
+    /**
+     * Send the abandoned cart reminder email.
+     *
+     * @param AbandonedCart $cart
+     * @return bool $result
+     */
+    public function sendMail($cart, $subject, $recipient = null, $templatePath = null): bool
+    {        
+        // settings/defaults
+        $view = Craft::$app->getView();
+        $oldTemplateMode = $view->getTemplateMode();
+        $originalLanguage = Craft::$app->language;
+        $view->setTemplateMode($view::TEMPLATE_MODE_CP);
+        // $oldTemplatesPath = $view->getTemplatesPath();
+        // $view->setTemplatesPath(AbandonedCart::$plugin->getInstance()->getBasePath());
+        // $html = $view->renderTemplate('/emails');
+        // $view->setTemplatesPath($oldTemplatesPath);
+
+        // get the order from the cart
+        $order = Order::findOne($cart->orderId);
+
+        if(!$order) {
+            $error = Craft::t('app', 'Could not find Order for Abandoned Cart email.');
+            Craft::error($error, __METHOD__);
+            Craft::$app->language = $originalLanguage;
+            $view->setTemplateMode($oldTemplateMode);
+            return false;
         }
 
-        return Craft::$app->mailer->send($message);
+        // template variables
+        $renderVariables = [
+            'order' => $order,
+            'discount' => false, // feature coming soon ;)
+            'checkoutLink' => 'abandoned-cart-restore?number=' . $order->number
+        ];
+
+        $templatePath = $view->renderString($templatePath, $renderVariables);
+
+        // validate that the email template exists
+        if (!$view->doesTemplateExist($templatePath)) {
+            $error = Craft::t('app', 'Email template does not exist at “{templatePath}”.', [
+                'templatePath' => $templatePath,
+            ]);
+            Craft::error($error, __METHOD__);
+            Craft::$app->language = $originalLanguage;
+            $view->setTemplateMode($oldTemplateMode);
+            return false;
+        }
+
+        // set the template as the email body
+        $emailBody = $view->renderTemplate($templatePath, $renderVariables);
+
+        // Get from address from site settings
+        $settings = Craft::$app->systemSettings->getSettings('email');
+        
+        // build the email
+        $newEmail = new Message();
+        $newEmail->setFrom([$settings['fromEmail'] => $settings['fromName']]);
+        $newEmail->setTo($recipient);
+        $newEmail->setSubject($subject);
+        $newEmail->setHtmlBody($emailBody);
+
+        // attempt to send
+        try {
+            if (!Craft::$app->getMailer()->send($newEmail)) {
+                $error = Craft::t('app', 'Abandoned cart email “{email}” could not be sent for order “{order}”.', [
+                    'order' => $order->id
+                ]);
+
+                Craft::error($error, __METHOD__);
+
+                Craft::$app->language = $originalLanguage;
+                $view->setTemplateMode($oldTemplateMode);
+
+                return false;
+            }
+        } catch (\Exception $e) {
+            $error = Craft::t('commerce', 'Abandoned cart email could not be sent for order “{order}”. Error: {error} {file}:{line}', [
+                'error' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'order' => $order->id
+            ]);
+
+            Craft::error($error, __METHOD__);
+
+            Craft::$app->language = $originalLanguage;
+            $view->setTemplateMode($oldTemplateMode);
+
+            return false;
+        }
+
+        return true;
+    }
+
+    public function markCartAsRecovered(Order $order)
+    {
+        $cart = $this->getAbandonedCartByOrderId($order->id);
+        if ($cart) {
+            $cart->isRecovered = true;
+            $cart->save($cart);
+        }
     }
 
     // Private Methods

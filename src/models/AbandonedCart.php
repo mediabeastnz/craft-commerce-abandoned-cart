@@ -19,6 +19,8 @@ class AbandonedCart extends Model
 
     public $email;
 
+    public $clicked;
+
     public $isScheduled;
 
     public $firstReminder;
@@ -49,6 +51,11 @@ class AbandonedCart extends Model
         return Order::findAll($this->orderId);
     }
 
+    public function getPrettyClicked(): string
+    {
+        return ($this->clicked) ? "Clicked" : "Not clicked";
+    }
+
     public function getPrettyFirstReminder(): string
     {
         return ($this->firstReminder) ? "Sent" : "Not sent";
@@ -70,9 +77,25 @@ class AbandonedCart extends Model
             return "Scheduled";
         } elseif ($this->isRecovered) {
             return "Recovered";
+        } else {
+            $expiry = Plugin::$plugin->getSettings()->restoreExpiryHours;
+            $expiredTime = $this->dateUpdated;
+            $expiredTime->add(new \DateInterval("PT{$expiry}H"));
+            $expiredTimestamp = $expiredTime->getTimestamp();
+
+            $now = new \DateTime();
+            $nowTimestamp = $now->getTimestamp();
+
+            // if time hasn't expired - yay
+            if ($nowTimestamp < $expiredTimestamp) {
+                return "Expiring";
+            }
+
+            return "Expired";
+            
         }
-        return "Expiring";
     }
+    
 
     /**
      * Saves a cart.
@@ -102,6 +125,7 @@ class AbandonedCart extends Model
         }
 
         $record->email = $model->email;
+        $record->clicked = $model->clicked;
         $record->isScheduled = $model->isScheduled;
         $record->firstReminder = $model->firstReminder;
         $record->secondReminder = $model->secondReminder;

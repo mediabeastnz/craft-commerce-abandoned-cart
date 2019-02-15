@@ -30,6 +30,7 @@ class Install extends Migration
                 'id' => $this->primaryKey(),
                 'orderId' => $this->integer()->notNull(),
                 'email' => $this->string()->notNull()->defaultValue(''),
+                'clicked' => $this->boolean()->defaultValue(false),
                 'isScheduled' => $this->boolean()->defaultValue(false),
                 'firstReminder' => $this->boolean()->defaultValue(false),
                 'secondReminder' => $this->boolean()->defaultValue(false),

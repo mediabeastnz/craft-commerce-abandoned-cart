@@ -40,31 +40,41 @@ class SendEmailReminder extends BaseJob
         for ($step = 0; $step < $totalSteps; $step++) { 
               
             $cart = AbandonedCart::$plugin->carts->getAbandonedCartById($this->cartId);
-            
-            if ($cart) {
 
-                $html = "<html><body><p>Your order stuff goes here...</p></body></html>";
+            $firstTemplate = AbandonedCart::$plugin->getSettings()->firstReminderTemplate;
+            $secondTemplate = AbandonedCart::$plugin->getSettings()->secondReminderTemplate;
+            $firstSubject = AbandonedCart::$plugin->getSettings()->firstReminderSubject;
+            $secondSubject = AbandonedCart::$plugin->getSettings()->secondReminderSubject;
+            
+            if ($cart && $cart->isRecovered == 0) {
                 
+                // First Reminder
                 if ($this->reminder == 1) {
-                    // do 1st reminder stuff
                     $cart->firstReminder = 1;
                     $cart->isScheduled = 0;
                     $cart->save($cart);
 
-                    AbandonedCart::$plugin->carts->sendMail($html, "Your cart is waiting...#1", $cart->email);
-
+                    AbandonedCart::$plugin->carts->sendMail(
+                        $cart, 
+                        $firstSubject, 
+                        $cart->email, 
+                        $firstTemplate
+                    );
                 }
 
+                // Second Reminder
                 if ($this->reminder == 2) {
-                    // do 2nd reminder stuff
                     $cart->secondReminder = 2;
                     $cart->isScheduled = 0;
                     $cart->save($cart);
                     
-                    AbandonedCart::$plugin->carts->sendMail($html, "Your cart is waiting...#2", $cart->email);
-
+                    AbandonedCart::$plugin->carts->sendMail(
+                        $cart, 
+                        $secondSubject, 
+                        $cart->email, 
+                        $secondTemplate
+                    );
                 }
-
             }
 
             $this->setProgress($queue, $step / $totalSteps);

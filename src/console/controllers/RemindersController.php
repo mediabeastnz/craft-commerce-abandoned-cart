@@ -45,11 +45,9 @@ class RemindersController extends Controller
      */
     public function actionScheduleEmails()
     {
-        // $this->confirm('Are you sure?');
+        $this->stdout('Abandoned Cart Job Started....' . PHP_EOL, Console::FG_GREEN);
         $res = AbandonedCart::$plugin->carts->getEmailsToSend();
-        $this->stdout('Running ... ' . PHP_EOL, Console::FG_YELLOW);
-        $this->stdout('Total Carts found: ' . $res . PHP_EOL, Console::FG_YELLOW);
-        $this->stdout('done' . PHP_EOL, Console::FG_GREEN);
+        $this->stdout('Abandoned Carts Found: ' . $res . PHP_EOL, Console::FG_GREEN);
         return ExitCode::OK;
     }
 

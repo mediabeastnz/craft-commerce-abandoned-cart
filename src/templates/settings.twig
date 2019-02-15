@@ -21,34 +21,62 @@
     first: true,
     label: "Plugin Name",
     name: 'pluginName',
-    value: settings.pluginName
+    value: settings.pluginName,
+    errors: settings.getErrors('pluginName')
+}) }}
+
+{{ forms.textField({
+    label: "Restore Link Expiry",
+    name: 'restoreExpiryHours',
+    value: settings.restoreExpiryHours,
+    instructions: 'Set how long (in hours) the restore cart link should last',
+    errors: settings.getErrors('restoreExpiryHours')
 }) }}
 
 {{ forms.textField({
     label: "First Reinder Delay",
     name: 'firstReminderDelay',
     value: settings.firstReminderDelay,
-    instructions: 'Set when the first remind will be sent in hours e.g. 12'
+    instructions: 'Set when the first remind will be sent in hours e.g. 12',
+    errors: settings.getErrors('firstReminderDelay')
 }) }}
 
 {{ forms.textField({
     label: "Second Reminder Delay",
     name: 'secondReminderDelay',
     value: settings.secondReminderDelay,
-    instructions: 'Set when the second remind will be sent in hours e.g. 24'
+    instructions: 'Set when the second remind will be sent in hours e.g. 24',
+    errors: settings.getErrors('secondReminderDelay')
 }) }}
 
 {{ forms.textField({
     label: "First Reminder Template",
     name: 'firstReminderTemplate',
-    value: settings.firstReminderTemplate
+    value: settings.firstReminderTemplate,
+    errors: settings.getErrors('firstReminderTemplate')
+}) }}
+
+{{ forms.textField({
+    label: "First Reminder Subject",
+    name: 'firstReminderSubject',
+    value: settings.firstReminderSubject,
+    errors: settings.getErrors('firstReminderSubject')
 }) }}
 
 {{ forms.textField({
     label: "Second Reminder Template",
     name: 'secondReminderTemplate',
-    value: settings.secondReminderTemplate
+    value: settings.secondReminderTemplate,
+    errors: settings.getErrors('secondReminderTemplate')
 }) }}
+
+{{ forms.textField({
+    label: "Second Reminder Subject",
+    name: 'secondReminderSubject',
+    value: settings.secondReminderSubject,
+    errors: settings.getErrors('secondReminderSubject')
+}) }}
+
 
 {% endnamespace %}
 

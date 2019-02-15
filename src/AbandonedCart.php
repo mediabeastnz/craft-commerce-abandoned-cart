@@ -12,6 +12,7 @@ use craft\services\Plugins;
 use craft\services\Elements;
 use craft\helpers\UrlHelper;
 use craft\events\PluginEvent;
+use craft\commerce\elements\Order;
 use craft\events\RegisterUrlRulesEvent;
 use craft\web\twig\variables\CraftVariable;
 use craft\events\RegisterComponentTypesEvent;
@@ -44,13 +45,13 @@ class AbandonedCart extends Plugin
             ]);
         });
 
-        // Event::on(
-        //     UrlManager::class,
-        //     UrlManager::EVENT_REGISTER_SITE_URL_RULES,
-        //     function (RegisterUrlRulesEvent $event) {
-        //         $event->rules['abandoned-cart-cron'] = 'abandoned-cart/base/trigger-abandoned-cart-emails';
-        //     }
-        // );
+        Event::on(
+            UrlManager::class,
+            UrlManager::EVENT_REGISTER_SITE_URL_RULES,
+            function (RegisterUrlRulesEvent $event) {
+                $event->rules['abandoned-cart-restore'] = '/abandoned-cart/base/restore-cart';
+            }
+        );
 
         Event::on(
             Plugins::class,
@@ -61,6 +62,11 @@ class AbandonedCart extends Plugin
                 }
             }
         );
+
+        Event::on(Order::class, Order::EVENT_AFTER_COMPLETE_ORDER, function(Event $e) {
+            $order = $e->sender;
+            $this->carts->markCartAsRecovered($order);
+        });
 
         Event::on(CraftVariable::class, CraftVariable::EVENT_INIT, function(Event $event) {
             $variable = $event->sender;
