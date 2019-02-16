@@ -45,6 +45,12 @@ class Carts extends Component
         // Completed being: reminders have already been sent
         $carts = CartRecord::find()->where('isScheduled = 0')->all();
 
+        $firstDelay = AbandonedCart::$plugin->getSettings()->firstReminderDelay;
+        $secondDelay = AbandonedCart::$plugin->getSettings()->secondReminderDelay;
+
+        $firstDelayInSeconds = $firstDelay * 3600;
+        $secondDelayInSeconds = $secondDelay * 3600;
+
         if ($carts && ($carts) > 0) {
             $i = 0;
             foreach ($carts as $cart) {
@@ -53,7 +59,7 @@ class Carts extends Component
                 // and then push it to the queue based on $firstReminderDelay setting
                 if ($cart->firstReminder == 0) {
 
-                    Craft::$app->queue->delay(10)->push(new SendEmailReminder([
+                    Craft::$app->queue->delay($firstDelayInSeconds)->push(new SendEmailReminder([
                         'cartId' => $cart->id, 
                         'reminder' => 1
                     ]));
@@ -67,7 +73,7 @@ class Carts extends Component
                 // and then push it to the queue based on $secondReminderDelay setting
                 } elseif ($cart->secondReminder == 0) {
 
-                    Craft::$app->queue->delay(10)->push(new SendEmailReminder([
+                    Craft::$app->queue->delay($secondDelayInSeconds)->push(new SendEmailReminder([
                         'cartId' => $cart->id, 
                         'reminder' => 2
                     ]));
