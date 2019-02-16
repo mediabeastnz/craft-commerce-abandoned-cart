@@ -164,18 +164,21 @@ class Carts extends Component
             ->where(['isRecovered' => 1])
             ->column();
         if($ids) {
-            $orders = Order::find($ids)->sum('totalPrice');
-            return $orders;
+            $orders = Order::find()
+                ->where(['commerce_orders.id' => $ids])
+                ->select('SUM(totalPrice) as total')
+                ->column();
+            return $orders[0];
         }
         return false;
     }
 
     public function getAbandondedCartsConversion()
     {
-        $recovered = $this->_createAbandonedCartsQuery()->where('clicked = 1')->count();
+        $recovered = $this->_createAbandonedCartsQuery()->where('isRecovered = 1')->count();
         $total = $this->getAbandonedCartsTotal();
         if ($total > 0 && $recovered > 0) {
-            $percent = ($recovered / 100) * $total;
+            $percent = ($recovered / $total) * 100;
             return $percent;
         }
         return 0;
