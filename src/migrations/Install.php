@@ -1,4 +1,9 @@
 <?php
+/**
+ * @copyright Copyright (c) Myles Derham.
+ * @license https://craftcms.github.io/license/
+ */
+
 namespace mediabeastnz\abandonedcart\migrations;
 
 use mediabeastnz\abandonedcart\AbandonedCart;

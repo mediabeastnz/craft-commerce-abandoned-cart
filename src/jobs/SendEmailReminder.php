@@ -1,14 +1,15 @@
 <?php
+/**
+ * @copyright Copyright (c) Myles Derham.
+ * @license https://craftcms.github.io/license/
+ */
+
 namespace mediabeastnz\abandonedcart\jobs;
 
 use Craft;
 use craft\queue\BaseJob;
 
 use mediabeastnz\abandonedcart\AbandonedCart;
-
-// Usage:
-// use mediabeastnz\abandonedcart\jobs\SendEmailReminder;
-// Craft::$app->queue->push(new SendEmailReminder());
 
 class SendEmailReminder extends BaseJob
 {

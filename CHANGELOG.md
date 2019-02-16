@@ -1,5 +1,5 @@
 # Release Notes for Abandoned Cart
 
-## 0.0.1 - 2019-02-06
+## 1.0.0 - 2019-02-16
 ### Added
 - Initial release

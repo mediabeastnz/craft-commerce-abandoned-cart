@@ -1,4 +1,9 @@
 <?php
+/**
+ * @copyright Copyright (c) Myles Derham.
+ * @license https://craftcms.github.io/license/
+ */
+
 namespace mediabeastnz\abandonedcart;
 
 use mediabeastnz\abandonedcart\models\Settings;
@@ -98,16 +103,14 @@ class AbandonedCart extends Plugin
         $navItem = parent::getCpNavItem();
         $navItem['label'] = $this->getPluginName();
 
-        // if (Craft::$app->getUser()->checkPermission('commerce-manageOrders')) {
-            $navItem['subnav']['dashboard'] = [
-                'label' => Craft::t('app', 'Dashboard'),
-                'url' => 'abandoned-cart/dashboard'
-            ];
-            $navItem['subnav']['settings'] = [
-                'label' => Craft::t('app', 'Settings'),
-                'url' => 'abandoned-cart/settings'
-            ];
-        // }
+        $navItem['subnav']['dashboard'] = [
+            'label' => Craft::t('app', 'Dashboard'),
+            'url' => 'abandoned-cart/dashboard'
+        ];
+        $navItem['subnav']['settings'] = [
+            'label' => Craft::t('app', 'Settings'),
+            'url' => 'abandoned-cart/settings'
+        ];
 
         return $navItem;
     }

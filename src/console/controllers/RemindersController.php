@@ -1,4 +1,9 @@
 <?php
+/**
+ * @copyright Copyright (c) Myles Derham.
+ * @license https://craftcms.github.io/license/
+ */
+
 namespace mediabeastnz\abandonedcart\console\controllers;
 
 use mediabeastnz\abandonedcart\AbandonedCart;
@@ -45,9 +50,14 @@ class RemindersController extends Controller
      */
     public function actionScheduleEmails()
     {
-        $this->stdout('Abandoned Cart Job Started....' . PHP_EOL, Console::FG_GREEN);
+        $this->stdout('Abandoned Cart: Finding carts' . PHP_EOL, Console::FG_YELLOW);
         $res = AbandonedCart::$plugin->carts->getEmailsToSend();
-        $this->stdout('Abandoned Carts Found: ' . $res . PHP_EOL, Console::FG_GREEN);
+        if ($res > 0) {
+            $this->stdout('Carts Found: ' . $res . PHP_EOL, Console::FG_GREEN);
+        } else {
+            $this->stdout('No carts were found' . PHP_EOL, Console::FG_RED);
+        }
+        $this->stdout('Abandoned Cart: Job completed' . PHP_EOL, Console::FG_YELLOW);
         return ExitCode::OK;
     }
 

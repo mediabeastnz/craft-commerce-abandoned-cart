@@ -1,14 +1,17 @@
 <?php
+/**
+ * @copyright Copyright (c) Myles Derham.
+ * @license https://craftcms.github.io/license/
+ */
+
 namespace mediabeastnz\abandonedcart\controllers;
 
 use mediabeastnz\abandonedcart\AbandonedCart;
-use mediabeastnz\abandonedcart\models\AbandonedCart as CartModel;
 
 use Craft;
 use craft\web\Controller;
 use craft\helpers\UrlHelper;
 use craft\commerce\elements\Order;
-
 
 use yii\web\Response;
 
@@ -34,9 +37,12 @@ class BaseController extends Controller
 
     public function actionIndex()
     {
-        $carts = AbandonedCart::$plugin->carts->getAbandonedCarts();
+        $carts = AbandonedCart::$plugin->carts->getAbandonedCarts(25);
         return $this->renderTemplate('abandoned-cart/index', array(
-            'carts' => $carts
+            'carts' => $carts,
+            'totalCarts' => AbandonedCart::$plugin->carts->getAbandonedCartsTotal(),
+            'totalRecovered' => AbandonedCart::$plugin->carts->getAbandonedCartsRecovered(),
+            'conversionRate' => AbandonedCart::$plugin->carts->getAbandondedCartsConversion()
         ));
     }
 

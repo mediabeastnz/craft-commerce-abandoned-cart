@@ -1,4 +1,8 @@
 <?php
+/**
+ * @copyright Copyright (c) Myles Derham.
+ * @license https://craftcms.github.io/license/
+ */
 
 namespace mediabeastnz\abandonedcart\models;
 

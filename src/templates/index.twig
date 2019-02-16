@@ -1,6 +1,6 @@
-{% extends "_layouts/cp" %}
 
-{% set title = "Dashboard" %}
+{% extends "_layouts/cp" %}
+{% set title = "Abandoned Carts" %}
 
 {% set selectedSubnavItem = 'dashboard' %}
 
@@ -9,21 +9,32 @@
 
 {# The content of the CP Section#}
 {% set content %}
-
-    <div class="field">
-        <div class="heading">
-            <h2>{{ "Abandoned Carts"|t('app') }}</h2>
-            <div class="instructions">
-                <p>Abandoned carts will be updated every few minutes. 
-                If a new cart is found it will be marked as scheduled and added to the queue.<br />
-                Items in the queue will be scheduled as per the delay times in settings.
-                </p>
+    
+    <div class="flex" style="align-items: end; margin: 20px auto;">
+        <div class="flex-grow">
+            <div class="field">
+                <div class="heading">
+                    <h2>{{ "Dashboard"|t('app') }}</h2>
+                    <div class="instructions">
+                        <p>Abandoned carts will be updated every few minutes.<br />
+                        If a new cart is found it will be marked as scheduled and added to the queue.<br />
+                        Items in the queue will be scheduled as per your settings.
+                        </p>
+                        {% if carts|length %}<p><em>Showing the last {{ carts|length }} out of {{ totalCarts }} | Ordered by last update</em></p>{% endif %}
+                    </div>
+                </div>
             </div>
+        </div>
+        <div class="flex-grow" style="text-align: center;">
+            <h3 style="color: #8f98a3;">Total Amount Recovered</h3>
+            <h1>${{ totalRecovered|number_format(2, '.', ',') }}</h1>
+            <h3 style="color: #8f98a3;">Abandoned Cart Conversion</h3>
+            <h1>{{ conversionRate }}%</h1>
         </div>
     </div>
 
     <div id="no-carts"{% if carts|length %} class="hidden"{% endif %}>
-        <p>{{ "No carts have been abandoned. Winning."|t('app') }}</p>
+        <p>{{ "No carts have been abandoned."|t('app') }}</p>
     </div>
 
     {% if carts | length %}
@@ -44,7 +55,7 @@
                 {% for cart in abandonedCarts %}
                     <tr data-id="{{ cart.id }}" data-name="{{ cart.order[0].reference | t('site') }}">
                         <td scope="row" data-title="{{ 'Order' | t('app') }}">
-                            <a class="nav-anchor" href="{{ url('commerce/orders/' ~ cart.order[0].id) }}">{{ "View" | t('app') }}</a>/<a class="nav-anchor" href="{{ url('/abandoned-cart-restore?number=' ~ cart.order[0].number) }}">{{ "Restore" | t('app') }}</a>
+                            <a class="nav-anchor" href="{{ url('commerce/orders/' ~ cart.order[0].id) }}">{{ "View" | t('app') }}</a>
                         </td>
                         <td scope="row" data-title="{{ 'Customer' | t('app') }}" class="">
                             {% if cart.order[0].customer.userId|length %}

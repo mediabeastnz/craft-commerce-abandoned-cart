@@ -1,4 +1,9 @@
 <?php
+/**
+ * @copyright Copyright (c) Myles Derham.
+ * @license https://craftcms.github.io/license/
+ */
+
 namespace mediabeastnz\abandonedcart\services;
 
 use mediabeastnz\abandonedcart\records\AbandonedCart as CartRecord;
@@ -119,12 +124,16 @@ class Carts extends Component
         return $carts;
     }
 
-    public function getAbandonedCarts()
+    // TODO: make query more effcient e.g. sub query to get order and customer details
+    public function getAbandonedCarts($limit = null)
     {
 
-        $rows = $this->_createAbandonedCartsQuery()
-            ->all();
-
+        if ($limit) {
+            $rows = $this->_createAbandonedCartsQuery()->limit($limit)->all();
+        } else {
+            $rows = $this->_createAbandonedCartsQuery()->all();
+        }
+    
         $carts = [];
 
         foreach ($rows as $row) {
@@ -141,6 +150,35 @@ class Carts extends Component
             ->one();
 
         return $row ? new CartModel($row) : null;
+    }
+
+    public function getAbandonedCartsTotal()
+    {
+        return $this->_createAbandonedCartsQuery()->count();
+    }
+
+    public function getAbandonedCartsRecovered()
+    {
+        $ids = $this->_createAbandonedCartsQuery()
+            ->select('orderId')
+            ->where(['isRecovered' => 1])
+            ->column();
+        if($ids) {
+            $orders = Order::find($ids)->sum('totalPrice');
+            return $orders;
+        }
+        return false;
+    }
+
+    public function getAbandondedCartsConversion()
+    {
+        $recovered = $this->_createAbandonedCartsQuery()->where('clicked = 1')->count();
+        $total = $this->getAbandonedCartsTotal();
+        if ($total > 0 && $recovered > 0) {
+            $percent = ($recovered / 100) * $total;
+            return $percent;
+        }
+        return 0;
     }
 
     public function getAbandonedCartByOrderId(int $id)
