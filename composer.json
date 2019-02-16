@@ -34,6 +34,7 @@
         "handle": "abandoned-cart",
         "hasCpSettings": true,
         "hasCpSection": true,
+        "changelogUrl": "https://raw.githubusercontent.com/mediabeastnz/craft-commerce-abandoned-cart/master/CHANGELOG.md",
         "class": "mediabeastnz\\abandonedcart\\AbandonedCart"
     }
 }
