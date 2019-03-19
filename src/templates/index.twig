@@ -7,6 +7,16 @@
 {# The URL to this plugin's base CP section #}
 {% set pluginCpUrl = url('abandoned-cart') %}
 
+{% block actionButton %}
+    <div id="button-container">
+        <div class="btngroup submit">
+            <a class="btn" href="{{ actionUrl('abandoned-cart/base/find-carts') }}">
+                {{ 'Find Abandoned Carts' | t('app') }}
+            </a>
+        </div>
+    </div>
+{% endblock %}
+
 {# The content of the CP Section#}
 {% set content %}
     

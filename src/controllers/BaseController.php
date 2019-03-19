@@ -46,6 +46,13 @@ class BaseController extends Controller
         ));
     }
 
+    public function actionFindCarts()
+    {
+        $abandonedCarts = AbandonedCart::$plugin->carts->getEmailsToSend();
+        Craft::$app->getSession()->setNotice(Craft::t('app', $abandonedCarts . ' abandoned carts were found'));
+        return $this->redirect('abandoned-cart/dashboard');
+    }
+
     // TODO: move logic to service
     public function actionRestoreCart()
     {
@@ -56,7 +63,7 @@ class BaseController extends Controller
         $number = $request->getParam('number');
         $order = Order::find()->number($number)->one();
 
-        if ($order && !$order->isCompleted){https://www.bobcat.test/abandoned-cart-restore?
+        if ($order && !$order->isCompleted){
 
             // check if abandoned cart expiry time is valid
             $expiry = AbandonedCart::$plugin->getSettings()->restoreExpiryHours;

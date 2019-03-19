@@ -46,7 +46,8 @@ class AbandonedCart extends Plugin
             $event->rules = array_merge($event->rules, [
                 'abandoned-cart' => 'abandoned-cart/base/index',
                 'abandoned-cart/dashboard' => 'abandoned-cart/base/index',
-                'abandoned-cart/settings' => 'abandoned-cart/base/settings'
+                'abandoned-cart/settings' => 'abandoned-cart/base/settings',
+                'abandoned-cart/find-carts' => 'abandoned-cart/base/index'
             ]);
         });
 

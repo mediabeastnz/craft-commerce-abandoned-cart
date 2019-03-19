@@ -24,6 +24,11 @@ Abandoned Carts settings. I recommend setting one code per email address to prev
 All abandoned cart emails are created as jobs and placed in Craft's queue, this should provide a great platform
 for high performing stores.
 
+## The settings
+
+Any cart will be marked as abandoned 1 hour after no activity. This is important to remember when adjusting the delay settings for the reminder
+emails. For example by default the 1st email will be sent 2 hours after the cart was last interacted with. Just remember to allow for that 1 hour delay upfront.
+
 ## Configuring Abandoned Cart
 
 Once you've set your preferred email delay times all that's left to do is set up a few cron
@@ -47,7 +52,7 @@ Some things to look forward to:
 
 * Dashboard widget
 * Better language support
-* Clean up tasks
+* Clean up task to remove carts after specific time
 * Improved dashboard
 
 Brought to you by [Myles Derham](https://github.com/mediabeastnz)
