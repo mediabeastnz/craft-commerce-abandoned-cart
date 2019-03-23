@@ -30,7 +30,6 @@
                         If a new cart is found it will be marked as scheduled and added to the queue.<br />
                         Items in the queue will be scheduled as per your settings.
                         </p>
-                        {% if carts|length %}<p><em>Showing the last {{ carts|length }} out of {{ totalCarts }}</em></p>{% endif %}
                     </div>
                 </div>
             </div>
@@ -49,8 +48,6 @@
 
     {% if carts | length %}
 
-        {% set abandonedCarts = carts %}
-
         <table id="carts" class="data fullwidth collapsible">
             <thead>
                 <th scope="col">{{ "Cart" | t('app') }}</th>
@@ -60,10 +57,11 @@
                 <th scope="col">{{ "2nd Reminder" | t('app') }}</th>
                 <th scope="col">{{ "Clicked" | t('app') }}</th>
                 <th scope="col">{{ "Status" | t('app') }}</th>
+                <th scope="col">{{ "Updated" | t('app') }}</th>
             </thead>
             <tbody>
-                {% for cart in abandonedCarts %}
-                    <tr data-id="{{ cart.id }}" data-name="{{ cart.order[0].reference | t('site') }}">
+                {% for cart in carts %}
+                    <tr data-id="{{ cart.id }}" data-name="{{ cart.order[0].reference | t('site') }}" style="font-size: 13px;">
                         <td scope="row" data-title="{{ 'Order' | t('app') }}">
                             <a class="nav-anchor" href="{{ url('commerce/orders/' ~ cart.order[0].id) }}">{{ "View" | t('app') }}</a>
                         </td>
@@ -115,10 +113,14 @@
                            
                             {{ status }}
                         </td>
+                        <td scope="row" data-title="{{ 'Order' | t('app') }}">
+                            {{cart.dateUpdated.nice}}
+                        </td>
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
+        {% include "_includes/pagination" %}
     {% endif %}
 
 {% endset %}

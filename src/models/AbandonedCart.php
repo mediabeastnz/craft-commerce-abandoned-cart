@@ -7,7 +7,6 @@
 namespace mediabeastnz\abandonedcart\models;
 
 use mediabeastnz\abandonedcart\AbandonedCart as Plugin;
-use mediabeastnz\abandonedcart\records\AbandonedCart as CartRecord;
 
 use craft\base\Model;
 use craft\validators\HandleValidator;
