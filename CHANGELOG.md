@@ -1,5 +1,9 @@
 # Release Notes for Abandoned Cart
 
+## 1.1.2.1 - 2019-04-10
+### Fixed
+- Patch for last version, fixes missing folder
+
 ## 1.1.2 - 2019-04-10
 ### Fixed issue [#4]
 - Fixed a bug that was introduced in version 1.1.1
