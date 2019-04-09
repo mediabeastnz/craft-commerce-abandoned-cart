@@ -1,5 +1,14 @@
 # Release Notes for Abandoned Cart
 
+## 1.1.2 - 2019-04-10
+### Fixed issue [#4]
+- Fixed a bug that was introduced in version 1.1.1
+
+[#4]: https://github.com/mediabeastnz/craft-commerce-abandoned-cart/issues/4
+
+### Added
+- Added the ability to change recovery url to soemthing other than shop/cart
+
 ## 1.1.1 - 2019-03-23
 ### Added
 - Added pagination to the dashboard to handle sites with large amounts of orders

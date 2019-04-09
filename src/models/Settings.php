@@ -28,6 +28,8 @@ class Settings extends Model
 
     public $secondReminderSubject = "Your items are still waiting - don't miss out";
 
+    public $recoveryUrl = "shop/cart";
+
     public function rules()
     {
         return [
@@ -39,7 +41,8 @@ class Settings extends Model
                 'firstReminderTemplate',
                 'secondReminderTemplate',
                 'firstReminderSubject', 
-                'secondReminderSubject'
+                'secondReminderSubject',
+                'recoveryUrl'
             ], 'required'],
             ['restoreExpiryHours', 'integer', 'min' => 24, 'max' => '168'], // Atleast 24hrs
             ['firstReminderDelay', 'integer', 'min' => 1, 'max' => 24], // 1hr +

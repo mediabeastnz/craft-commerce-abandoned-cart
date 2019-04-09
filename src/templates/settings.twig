@@ -99,6 +99,14 @@
     errors: settings.getErrors('discountCode')
 }) }}
 
+{{ forms.textField({
+    label: "Recovery Redirect URL",
+    name: 'recoveryUrl',
+    value: settings.recoveryUrl,
+    instructions: 'By default recovered carts will be redirected to shop/cart, use this field if you use something different.<br /><i>Note: it should just be the slug e.g. shop/cart and not the full URL.</i>',
+    errors: settings.getErrors('recoveryUrl')
+}) }}
+
 
 {% endnamespace %}
 

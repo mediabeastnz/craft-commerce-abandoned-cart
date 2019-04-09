@@ -126,6 +126,11 @@ class BaseController extends Controller
                     $abandonedCartRecord->clicked = true;
                     $abandonedCartRecord->save($abandonedCartRecord);
 
+                    $recoveryUrl = AbandonedCart::$plugin->getSettings()->recoveryUrl;
+                    if($recoveryUrl) {
+                        return $this->redirect($recoveryUrl);
+                    }
+
                     return $this->redirect('shop/cart');
                 }
             }
