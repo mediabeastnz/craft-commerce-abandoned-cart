@@ -61,6 +61,7 @@
             </thead>
             <tbody>
                 {% for cart in carts %}
+                    {% if cart.order|length %}
                     <tr data-id="{{ cart.id }}" data-name="{{ cart.order[0].reference | t('site') }}" style="font-size: 13px;">
                         <td scope="row" data-title="{{ 'Order' | t('app') }}">
                             <a class="nav-anchor" href="{{ url('commerce/orders/' ~ cart.order[0].id) }}">{{ "View" | t('app') }}</a>
@@ -117,6 +118,58 @@
                             {{cart.dateUpdated.nice}}
                         </td>
                     </tr>
+                    {% else %}
+                    <tr data-id="{{ cart.id }}" data-name="{{ cart.orderId | t('site') }}" style="font-size: 13px;">
+                        <td scope="row" data-title="{{ 'Order' | t('app') }}">-</td>
+                        <td scope="row" data-title="{{ 'Customer' | t('app') }}" class="">
+                            {{ cart.email }}
+                        </td>
+                        <td scope="row" data-title="{{ 'Total' | t('app') }}" class="">-</td>
+                        <td scope="row" data-title="{{ '1st Reminder' | t('app') }}" class="">
+                            {% if cart.firstReminder %}
+                                <div class="status green"></div>
+                            {% else %}
+                                <div class="status orange"></div>
+                            {% endif %}
+                            {{ cart.prettyFirstReminder }}
+                        </td>
+                        <td scope="row" data-title="{{ '2nd Reminder' | t('app') }}" class="">
+                            {% if cart.secondReminder %}
+                                <div class="status green"></div>
+                            {% else %}
+                                <div class="status orange"></div>
+                            {% endif %}
+                            {{ cart.prettySecondReminder }}
+                        </td>
+                        <td scope="row" data-title="{{ 'Clicked' | t('app') }}" class="">
+                            {% if cart.clicked %}
+                                <div class="status green"></div>
+                            {% else %}
+                                <div class="status red"></div>
+                            {% endif %}
+                            {{ cart.prettyClicked }}
+                        </td>
+                        <td scope="row" data-title="{{ 'Status' | t('app') }}" class="">
+                            
+                            {% set status = cart.status %}
+                            
+                            {% if cart.isRecovered and status != 'Expired' %}
+                                <div class="status green"></div>
+                            {% elseif cart.isScheduled and status != 'Expired' %}
+                                <div class="status orange"></div>
+                            {% elseif status != 'Expired' %}
+                                <div class="status blue"></div>
+                            {% else %}
+                                <div class="status red"></div>
+                            {% endif %}
+                           
+                            {{ status }}
+                        </td>
+                        <td scope="row" data-title="{{ 'Order' | t('app') }}">
+                            {{cart.dateUpdated.nice}}
+                        </td>
+                    </tr>
+                    {% endif %}
                 {% endfor %}
             </tbody>
         </table>
