@@ -1,5 +1,9 @@
 # Release Notes for Abandoned Cart
 
+## 1.1.4 - 2019-05-19
+### Fixed
+- Resolved a date deprecation warning
+
 ## 1.1.3 - 2019-05-10
 ### Fixed
 - Abandoned carts still display if original Order is missing
