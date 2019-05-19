@@ -115,7 +115,7 @@
                             {{ status }}
                         </td>
                         <td scope="row" data-title="{{ 'Order' | t('app') }}">
-                            {{cart.dateUpdated.nice}}
+                            {{cart.dateUpdated|datetime('short') }}
                         </td>
                     </tr>
                     {% else %}
@@ -166,7 +166,7 @@
                             {{ status }}
                         </td>
                         <td scope="row" data-title="{{ 'Order' | t('app') }}">
-                            {{cart.dateUpdated.nice}}
+                            {{cart.dateUpdated|datetime('short') }}
                         </td>
                     </tr>
                     {% endif %}
