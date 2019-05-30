@@ -124,7 +124,7 @@ class Carts extends Component
         $carts->andWhere('commerce_orders.dateUpdated >= DATE_ADD(NOW(), INTERVAL - '.$end.' HOUR)');
         $carts->andWhere('totalPrice > 0');
         $carts->andWhere('isCompleted = 0');
-        $carts->andWhere('email IS NOT NULL');
+        $carts->andWhere('email != ""');
         $carts->orderBy('commerce_orders.dateUpdated desc');
         $carts->all();
         return $carts;
