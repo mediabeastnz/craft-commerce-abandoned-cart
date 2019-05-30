@@ -1,5 +1,13 @@
 # Release Notes for Abandoned Cart
 
+## 1.1.5 - 2019-05-30
+### Changed
+- New plugin icon 🎉
+### Fixed [#14]
+- Fixed an issue with abandoned carts with no emails. I've submitted a pull request to Craft Commerce to change how emails are stored when an order is first created.
+
+[#14]: https://github.com/mediabeastnz/craft-commerce-abandoned-cart/issues/14
+
 ## 1.1.4 - 2019-05-19
 ### Fixed
 - Resolved a date deprecation warning
