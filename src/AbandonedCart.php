@@ -103,15 +103,22 @@ class AbandonedCart extends Plugin
     {
         $navItem = parent::getCpNavItem();
         $navItem['label'] = $this->getPluginName();
+        
+        if ( !Craft::$app->getConfig()->general->devMode ) {
+            
+            $navItem['subnav']['dashboard'] = [
+                'label' => Craft::t('app', 'Dashboard'),
+                'url' => 'abandoned-cart/dashboard'
+            ];
 
-        $navItem['subnav']['dashboard'] = [
-            'label' => Craft::t('app', 'Dashboard'),
-            'url' => 'abandoned-cart/dashboard'
-        ];
-        $navItem['subnav']['settings'] = [
-            'label' => Craft::t('app', 'Settings'),
-            'url' => 'abandoned-cart/settings'
-        ];
+            $navItem['subnav']['settings'] = [
+                'label' => Craft::t('app', 'Settings'),
+                'url' => 'abandoned-cart/settings'
+            ];
+            return $navItem;
+        }
+
+        $navItem['url'] = 'abandoned-cart/dashboard';
 
         return $navItem;
     }
