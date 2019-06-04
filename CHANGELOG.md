@@ -1,10 +1,15 @@
 # Release Notes for Abandoned Cart
 
+## 1.1.6 - 2019-06-04
+### Added
+- Added support for `allowAdminChanges`, settings will be disabled by default
+
 ## 1.1.5 - 2019-05-30
 ### Changed
 - New plugin icon 🎉
-### Fixed [#14]
-- Fixed an issue with abandoned carts with no emails. I've submitted a pull request to Craft Commerce to change how emails are stored when an order is first created.
+
+### Fixed
+- Fixed the issue [#14] which involved abandoned carts with no email addresses. I've submitted a pull request to Craft Commerce to change how emails are stored when an order is first created.
 
 [#14]: https://github.com/mediabeastnz/craft-commerce-abandoned-cart/issues/14
 

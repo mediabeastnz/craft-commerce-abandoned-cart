@@ -33,6 +33,8 @@ class BaseController extends Controller
 
     public function actionSettings()
     {
+        $this->requireAdmin();
+
         $settings = AbandonedCart::$plugin->getSettings();
 
         return $this->renderTemplate('abandoned-cart/settings', array(
