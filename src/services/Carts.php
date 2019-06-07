@@ -26,17 +26,22 @@ class Carts extends Component
 
     public function getEmailsToSend()
     {
+        $testMode = AbandonedCart::$plugin->getSettings()->testMode;
         // get abandoned carts
         $carts = $this->getAbandonedOrders();
         // create any new carts
         if($carts->count() > 0) {
             $this->createNewCarts($carts);
         }
+
         // return carts total
-        if ($totalScheduled = $this->scheduleReminders()) {
-            return $totalScheduled;
+        if (!$testMode) {
+            if ($totalScheduled = $this->scheduleReminders()) {
+                return $totalScheduled;
+            }
+            return 0;
         }
-        return 0;
+        return true;
     }
 
     public function scheduleReminders()

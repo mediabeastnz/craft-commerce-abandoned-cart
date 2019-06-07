@@ -2,7 +2,7 @@
     "name": "mediabeastnz/craft-commerce-abandoned-cart",
     "description": "Abandoned Cart plugin for Craft Commerce 2",
     "type": "craft-plugin",
-    "version": "1.1.6",
+    "version": "1.2.0",
     "keywords": [
         "craft",
         "cms",

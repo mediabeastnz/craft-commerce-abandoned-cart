@@ -1,5 +1,10 @@
 # Release Notes for Abandoned Cart
 
+## 1.2.0 - 2019-06-08
+### Added
+- Test Mode 🎉 Test mode allows the queue to be bypassed and emails to instantly be sent allowing for quicker and easier testing
+- Default email templates now include `{% set cart = craft.commerce.carts.cart %}` so that commerce helper functions like `|currency` can be used.
+
 ## 1.1.6 - 2019-06-04
 ### Added
 - Added support for `allowAdminChanges`, settings will be disabled by default

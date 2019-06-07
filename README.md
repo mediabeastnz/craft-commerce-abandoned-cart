@@ -29,6 +29,11 @@ for high performing stores.
 Any cart will be marked as abandoned 1 hour after no activity. This is important to remember when adjusting the delay settings for the reminder
 emails. For example by default the 1st email will be sent 2 hours after the cart was last interacted with. Just remember to allow for that 1 hour delay upfront.
 
+## Test Mode
+When test mode is enabled, you can click the "Find Abandoned Carts" button on the dashboard to bypass the queue and force emails to be sent instantly.
+This is only recommended while in development as if you had many carts that meet your criteria then the system would try and send all those emails which is quite intensive on server resources.
+To test I normally add an order to my cart, edit the dates of that order in the `commerce_orders` table to be in the past and then click the "Find abandoned Carts" button.
+
 ## Configuring Abandoned Cart
 
 Once you've set your preferred email delay times all that's left to do is set up a few cron

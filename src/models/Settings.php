@@ -12,6 +12,8 @@ class Settings extends Model
 {
     public $pluginName = 'Abandoned Carts';
 
+    public $testMode = false;
+
     public $restoreExpiryHours = '48';
 
     public $firstReminderDelay = '1';

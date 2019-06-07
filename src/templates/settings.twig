@@ -30,6 +30,14 @@
     errors: settings.getErrors('pluginName')
 }) }}
 
+{{ forms.lightswitchField({
+    label: 'Enable Test Mode',
+    instructions: 'If test mode is enabled, clicking the Find Abandoned Carts button will instantly send any orders that meet the criteria and bypass the queue.',
+    id: 'testMode',
+    name: 'testMode',
+    on: settings.testMode,
+}) }}
+
 {{ forms.textField({
     label: "Restore Link Expiry",
     name: 'restoreExpiryHours',

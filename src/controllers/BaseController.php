@@ -87,8 +87,60 @@ class BaseController extends Controller
 
     public function actionFindCarts()
     {
+        $testMode = AbandonedCart::$plugin->getSettings()->testMode;
+        $firstTemplate = AbandonedCart::$plugin->getSettings()->firstReminderTemplate;
+        $secondTemplate = AbandonedCart::$plugin->getSettings()->secondReminderTemplate;
+        $firstSubject = AbandonedCart::$plugin->getSettings()->firstReminderSubject;
+        $secondSubject = AbandonedCart::$plugin->getSettings()->secondReminderSubject;
+
+        if ($testMode) {
+            AbandonedCart::$plugin->carts->getEmailsToSend();
+            $abandonedCarts = AbandonedCart::$plugin->carts->getAbandonedCarts();
+            $totalCarts = 0;
+            if (count($abandonedCarts) > 0) {
+                foreach ($abandonedCarts as $cart) {
+                    if ($cart && $cart->isRecovered == 0) {
+
+                        // First Reminder
+                        if ($cart->firstReminder == 0) {
+                            $totalCarts++;
+                            $cart->firstReminder = 1;
+                            $cart->isScheduled = 0;
+                            $cart->save($cart);
+
+                            AbandonedCart::$plugin->carts->sendMail(
+                                $cart,
+                                $firstSubject,
+                                $cart->email,
+                                $firstTemplate
+                            );
+                            continue;
+                        }
+
+                        // Second Reminder
+                        if ($cart->firstReminder == 1 && $cart->secondReminder == 0) {
+                            $totalCarts++;
+                            $cart->secondReminder = 1;
+                            $cart->isScheduled = 0;
+                            $cart->save($cart);
+
+                            AbandonedCart::$plugin->carts->sendMail(
+                                $cart,
+                                $secondSubject,
+                                $cart->email,
+                                $secondTemplate
+                            );
+                        }
+                    }
+                }
+            }
+            Craft::$app->getSession()->setNotice(Craft::t('app', $totalCarts . ' abandoned carts emails were sent'));
+            return $this->redirect('abandoned-cart/dashboard');
+        }
+
         $abandonedCarts = AbandonedCart::$plugin->carts->getEmailsToSend();
-        Craft::$app->getSession()->setNotice(Craft::t('app', $abandonedCarts . ' abandoned carts were found'));
+
+        Craft::$app->getSession()->setNotice(Craft::t('app', $abandonedCarts . ' abandoned carts were queued'));
         return $this->redirect('abandoned-cart/dashboard');
     }
 
