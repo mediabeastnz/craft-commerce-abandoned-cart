@@ -191,7 +191,7 @@ class BaseController extends Controller
 
         }
 
-        $session->setNotice("Your cart coundn't be restored, it may have expired.");
+        $session->setNotice("Your cart couldn't be restored, it may have expired.");
         return $this->redirect('shop/cart');
     }
 
