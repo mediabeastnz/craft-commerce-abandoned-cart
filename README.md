@@ -1,4 +1,4 @@
-<p align="center"><img src="./src/icon.svg" width="100" height="100" alt="Abandoned Cart plugin for Craft Commerce 2"></p>
+<p align="center"><a href="https://plugins.craftcms.com/abandoned-cart" target="_blank"><img src="./src/icon.svg" width="100" height="100" alt="Abandoned Cart plugin for Craft Commerce 2"></a></p>
 
 # Abandoned Cart plugin for Craft Commerce 2
 
@@ -36,6 +36,18 @@ To test I normally add an order to my cart, edit the dates of that order in the 
 
 ## Configuring Abandoned Cart
 
+Ideally you'll want to setup a couple server cron jobs to trigger both the finding of abandoned carts and the triggering of Crafts queue.
+However if you don't for some reason have access to server cron jobs a URL can be used to manually trigger the above. 
+This allows you to use something like cron-job.org.
+
+### Manual trigger
+To manually trigger the jobs to find carts and process the queue you'll need to hit this URL `https://[www.website.com]/actions/abandoned-cart/base/find-carts&passkey={{passKey}}`. The `keyPass` by default is generated for you in the settings area but feel free to set this to whatever you like.
+
+A good way to find this URL is to navigate to the Dashboard and in the top right there is a button labelled "Find Abandoned Carts".
+
+Once you have the URL you want to fire this job every 5 minutes or what ever suits you requirements.
+
+### Server based cron jobs
 Once you've set your preferred email delay times all that's left to do is set up a few cron
 jobs to run every few minutes (adjust this to suit your sites needs). The first cron job will look for new
 abandoned carts and schedule emails.
@@ -59,5 +71,3 @@ Some things to look forward to:
 * Better language support
 * Clean up task to remove carts after specific time
 * Improved dashboard
-
-Brought to you by [Myles Derham](https://github.com/mediabeastnz)

@@ -7,6 +7,7 @@
 namespace mediabeastnz\abandonedcart\models;
 
 use craft\base\Model;
+use craft\helpers\StringHelper;
 
 class Settings extends Model
 {
@@ -14,13 +15,15 @@ class Settings extends Model
 
     public $testMode = false;
 
+    public $passKey;
+
     public $restoreExpiryHours = '48';
 
     public $firstReminderDelay = '1';
 
     public $secondReminderDelay = '12';
 
-    public $discountCode = "";
+    public $discountCode;
 
     public $firstReminderTemplate = 'abandoned-cart/emails/first';
 
@@ -31,6 +34,13 @@ class Settings extends Model
     public $secondReminderSubject = "Your items are still waiting - don't miss out";
 
     public $recoveryUrl = "shop/cart";
+
+    public function __construct() 
+    {
+        if (empty($this->passKey)) {
+            $this->passKey = StringHelper::randomString(15);
+        }
+    }
 
     public function rules()
     {
@@ -44,7 +54,8 @@ class Settings extends Model
                 'secondReminderTemplate',
                 'firstReminderSubject', 
                 'secondReminderSubject',
-                'recoveryUrl'
+                'recoveryUrl',
+                'passKey'
             ], 'required'],
             ['restoreExpiryHours', 'integer', 'min' => 24, 'max' => '168'], // Atleast 24hrs
             ['firstReminderDelay', 'integer', 'min' => 1, 'max' => 24], // 1hr +
@@ -53,4 +64,5 @@ class Settings extends Model
             [['firstReminderSubject', 'secondReminderSubject'], 'string'],
         ];
     }
+
 }

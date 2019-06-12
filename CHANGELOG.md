@@ -1,5 +1,10 @@
 # Release Notes for Abandoned Cart
 
+## 1.3.0 - 2019-06-08
+### Added
+- Jobs can be triggered via a URL now using a secret key. This means people without access to cron jobs can use this plugin.
+- Added setting for a configurable secret key which is used to verify job requests
+
 ## 1.2.0 - 2019-06-08
 ### Added
 - Test Mode 🎉 Test mode allows the queue to be bypassed and emails to instantly be sent allowing for quicker and easier testing

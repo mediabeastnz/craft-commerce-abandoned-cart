@@ -319,6 +319,28 @@ class Carts extends Component
         }
     }
 
+    // Static Methods
+    // =========================================================================
+
+    // Shoutout to @CraftCMS and the FeedMe plugin for this helper function
+    public static function getBrowserName($userAgent)
+    {
+        if (strpos($userAgent, 'Opera') || strpos($userAgent, 'OPR/')) {
+            return 'Opera';
+        } else if (strpos($userAgent, 'Edge')) {
+            return 'Edge';
+        } else if (strpos($userAgent, 'Chrome')) {
+            return 'Chrome';
+        } else if (strpos($userAgent, 'Safari')) {
+            return 'Safari';
+        } else if (strpos($userAgent, 'Firefox')) {
+            return 'Firefox';
+        } else if (strpos($userAgent, 'MSIE') || strpos($userAgent, 'Trident/7')) {
+            return 'Internet Explorer';
+        }
+        return 'Other';
+    }
+
     // Private Methods
     // =========================================================================
 

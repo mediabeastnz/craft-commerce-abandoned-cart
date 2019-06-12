@@ -10,7 +10,7 @@
 {% block actionButton %}
     <div id="button-container">
         <div class="btngroup submit">
-            <a class="btn" href="{{ actionUrl('abandoned-cart/base/find-carts') }}">
+            <a class="btn" href="{{ url('/actions/abandoned-cart/base/find-carts', 'passkey=' ~ passKey) }}">
                 {{ 'Find Abandoned Carts' | t('app') }}
             </a>
         </div>

@@ -30,6 +30,15 @@
     errors: settings.getErrors('pluginName')
 }) }}
 
+{{ forms.textField({
+    label: 'Cron Pass Key',
+    instructions: 'A generated, unique string to increase security against crons being run inadvertently.',
+    id: 'passKey',
+    name: 'passKey',
+    value: settings.passKey,
+    errors: settings.getErrors('passKey')
+}) }}
+
 {{ forms.lightswitchField({
     label: 'Enable Test Mode',
     instructions: 'If test mode is enabled, clicking the Find Abandoned Carts button will instantly send any orders that meet the criteria and bypass the queue.',

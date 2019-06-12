@@ -18,14 +18,15 @@ use craft\commerce\elements\Order;
 use craft\db\Paginator;
 use craft\db\Query;
 use craft\web\twig\variables\Paginate;
-
+use yii\web\ForbiddenHttpException;
 use yii\web\Response;
 
 class BaseController extends Controller
 {
 
     protected $allowAnonymous = [
-        'restore-cart'
+        'restore-cart',
+        'find-carts'
     ];
 
     // Public Methods
@@ -74,74 +75,106 @@ class BaseController extends Controller
                     'nextUrl' => $page->getNextUrl(),
                 ],
                 'totalRecovered' => AbandonedCart::$plugin->carts->getAbandonedCartsRecovered(),
-                'conversionRate' => AbandonedCart::$plugin->carts->getAbandondedCartsConversion()
+                'conversionRate' => AbandonedCart::$plugin->carts->getAbandondedCartsConversion(),
+                'passKey' => AbandonedCart::$plugin->getSettings()->passKey
             ]);
         } else {
             return $this->renderTemplate('abandoned-cart/index', [
                 'carts' => false,
                 'totalRecovered' => AbandonedCart::$plugin->carts->getAbandonedCartsRecovered(),
-                'conversionRate' => AbandonedCart::$plugin->carts->getAbandondedCartsConversion()
+                'conversionRate' => AbandonedCart::$plugin->carts->getAbandondedCartsConversion(),
+                'passKey' => AbandonedCart::$plugin->getSettings()->passKey
             ]);
         }  
     }
 
     public function actionFindCarts()
     {
+        $request = Craft::$app->getRequest();
+        $passkeyFromRequest = $request->getParam('passkey');
+        $browser = AbandonedCart::$plugin->carts->getBrowserName($request->getUserAgent());
+
+        // get settings
         $testMode = AbandonedCart::$plugin->getSettings()->testMode;
+        $passKey = AbandonedCart::$plugin->getSettings()->passKey;
         $firstTemplate = AbandonedCart::$plugin->getSettings()->firstReminderTemplate;
         $secondTemplate = AbandonedCart::$plugin->getSettings()->secondReminderTemplate;
         $firstSubject = AbandonedCart::$plugin->getSettings()->firstReminderSubject;
         $secondSubject = AbandonedCart::$plugin->getSettings()->secondReminderSubject;
 
-        if ($testMode) {
-            AbandonedCart::$plugin->carts->getEmailsToSend();
-            $abandonedCarts = AbandonedCart::$plugin->carts->getAbandonedCarts();
-            $totalCarts = 0;
-            if (count($abandonedCarts) > 0) {
-                foreach ($abandonedCarts as $cart) {
-                    if ($cart && $cart->isRecovered == 0) {
+        // check if passkey in url matches settings
+        $proceed = $passkeyFromRequest == $passKey;
 
-                        // First Reminder
-                        if ($cart->firstReminder == 0) {
-                            $totalCarts++;
-                            $cart->firstReminder = 1;
-                            $cart->isScheduled = 0;
-                            $cart->save($cart);
+        if ($proceed) {
 
-                            AbandonedCart::$plugin->carts->sendMail(
-                                $cart,
-                                $firstSubject,
-                                $cart->email,
-                                $firstTemplate
-                            );
-                            continue;
-                        }
+            // bypass the queue (test mode is enabled)
+            if ($testMode) {
+                AbandonedCart::$plugin->carts->getEmailsToSend();
+                $abandonedCarts = AbandonedCart::$plugin->carts->getAbandonedCarts();
+                $totalCarts = 0;
+                if (count($abandonedCarts) > 0) {
+                    foreach ($abandonedCarts as $cart) {
+                        if ($cart && $cart->isRecovered == 0) {
 
-                        // Second Reminder
-                        if ($cart->firstReminder == 1 && $cart->secondReminder == 0) {
-                            $totalCarts++;
-                            $cart->secondReminder = 1;
-                            $cart->isScheduled = 0;
-                            $cart->save($cart);
+                            // First Reminder
+                            if ($cart->firstReminder == 0) {
+                                $totalCarts++;
+                                $cart->firstReminder = 1;
+                                $cart->isScheduled = 0;
+                                $cart->save($cart);
 
-                            AbandonedCart::$plugin->carts->sendMail(
-                                $cart,
-                                $secondSubject,
-                                $cart->email,
-                                $secondTemplate
-                            );
+                                AbandonedCart::$plugin->carts->sendMail(
+                                    $cart,
+                                    $firstSubject,
+                                    $cart->email,
+                                    $firstTemplate
+                                );
+                                continue;
+                            }
+
+                            // Second Reminder
+                            if ($cart->firstReminder == 1 && $cart->secondReminder == 0) {
+                                $totalCarts++;
+                                $cart->secondReminder = 1;
+                                $cart->isScheduled = 0;
+                                $cart->save($cart);
+
+                                AbandonedCart::$plugin->carts->sendMail(
+                                    $cart,
+                                    $secondSubject,
+                                    $cart->email,
+                                    $secondTemplate
+                                );
+                            }
                         }
                     }
                 }
+
+                // must be a cron...
+                if ($browser == 'Other') {
+                    Craft::$app->getQueue()->run();
+                    return $this->asJson(Craft::t('app', $totalCarts . ' abandoned carts emails were sent'));
+                }
+
+                Craft::$app->getSession()->setNotice(Craft::t('app', $totalCarts . ' abandoned carts emails were sent'));
+                return $this->redirect(Craft::$app->getRequest()->referrer);
             }
-            Craft::$app->getSession()->setNotice(Craft::t('app', $totalCarts . ' abandoned carts emails were sent'));
-            return $this->redirect('abandoned-cart/dashboard');
+
+            // send abandoned carts to queue as per normal
+            $abandonedCarts = AbandonedCart::$plugin->carts->getEmailsToSend();
+
+            // must be a cron...
+            if ($browser == 'Other') {
+                Craft::$app->getQueue()->run();
+                return $this->asJson(Craft::t('app', $abandonedCarts . ' abandoned carts were queued'));
+            }
+
+            Craft::$app->getSession()->setNotice(Craft::t('app', $abandonedCarts . ' abandoned carts were queued'));
+            return $this->redirect(Craft::$app->getRequest()->referrer);
         }
 
-        $abandonedCarts = AbandonedCart::$plugin->carts->getEmailsToSend();
-
-        Craft::$app->getSession()->setNotice(Craft::t('app', $abandonedCarts . ' abandoned carts were queued'));
-        return $this->redirect('abandoned-cart/dashboard');
+        // throw a 403 error as access is not allowed.
+        throw new ForbiddenHttpException('User is not authorized to perform this action');
     }
 
     // TODO: move logic to service
