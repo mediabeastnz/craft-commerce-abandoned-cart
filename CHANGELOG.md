@@ -1,5 +1,13 @@
 # Release Notes for Abandoned Cart
 
+## 1.3.1 - 2019-07-04
+### Fixed
+- Fixed an issue on the dashboard where the order wasn't being found and displayed
+
+### Changed
+- Dashboard now displays if Test Mode is enabled or not
+- If cart recovery fails (expired) and a custom recovery url is set, that will be used
+
 ## 1.3.0 - 2019-06-08
 ### Added
 - Jobs can be triggered via a URL now using a secret key. This means people without access to cron jobs can use this plugin.
