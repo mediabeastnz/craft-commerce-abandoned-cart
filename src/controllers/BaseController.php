@@ -74,6 +74,7 @@ class BaseController extends Controller
                     'prevUrl' => $page->getPrevUrl(),
                     'nextUrl' => $page->getNextUrl(),
                 ],
+                'testMode' => AbandonedCart::$plugin->getSettings()->testMode,
                 'totalRecovered' => AbandonedCart::$plugin->carts->getAbandonedCartsRecovered(),
                 'conversionRate' => AbandonedCart::$plugin->carts->getAbandondedCartsConversion(),
                 'passKey' => AbandonedCart::$plugin->getSettings()->passKey
@@ -189,6 +190,9 @@ class BaseController extends Controller
 
         if ($order && !$order->isCompleted){
 
+            // get custom restore url
+            $recoveryUrl = AbandonedCart::$plugin->getSettings()->recoveryUrl;
+
             // check if abandoned cart expiry time is valid
             $expiry = AbandonedCart::$plugin->getSettings()->restoreExpiryHours;
             $abandonedCartRecord = AbandonedCart::$plugin->carts->getAbandonedCartByOrderId($order->id);
@@ -213,7 +217,6 @@ class BaseController extends Controller
                     $abandonedCartRecord->clicked = true;
                     $abandonedCartRecord->save($abandonedCartRecord);
 
-                    $recoveryUrl = AbandonedCart::$plugin->getSettings()->recoveryUrl;
                     if($recoveryUrl) {
                         return $this->redirect($recoveryUrl);
                     }
@@ -225,6 +228,9 @@ class BaseController extends Controller
         }
 
         $session->setNotice("Your cart couldn't be restored, it may have expired.");
+        if($recoveryUrl) {
+            return $this->redirect($recoveryUrl);
+        }
         return $this->redirect('shop/cart');
     }
 

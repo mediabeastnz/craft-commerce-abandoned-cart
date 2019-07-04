@@ -11,7 +11,7 @@ use mediabeastnz\abandonedcart\records\AbandonedCart as CartRecord;
 
 use craft\base\Model;
 use craft\validators\HandleValidator;
-use craft\commerce\elements\Order;
+use craft\commerce\records\Order;
 
 class AbandonedCart extends Model
 {
@@ -51,9 +51,11 @@ class AbandonedCart extends Model
         ];
     }
 
-    public function getOrder(): array
+    public function getOrder()
     {
-        return Order::findAll($this->orderId);
+        $query = Order::find();
+        $query->where(['id' => $this->orderId]);
+        return $query->one();
     }
 
     public function getPrettyClicked(): string

@@ -8,12 +8,15 @@
 {% set pluginCpUrl = url('abandoned-cart') %}
 
 {% block actionButton %}
-    <div id="button-container">
+    <div id="button-container" class="centeralign">
         <div class="btngroup submit">
-            <a class="btn" href="{{ url('/actions/abandoned-cart/base/find-carts', 'passkey=' ~ passKey) }}">
+            <a class="btn submit" href="{{ url('/actions/abandoned-cart/base/find-carts', 'passkey=' ~ passKey) }}">
                 {{ 'Find Abandoned Carts' | t('app') }}
             </a>
         </div>
+        {% if testMode %}
+            <h4 style="color: #cc5643;">Test Mode Enabled</h4>
+        {% endif %}
     </div>
 {% endblock %}
 
@@ -62,18 +65,18 @@
             <tbody>
                 {% for cart in carts %}
                     {% if cart.order|length %}
-                    <tr data-id="{{ cart.id }}" data-name="{{ cart.order[0].reference | t('site') }}" style="font-size: 13px;">
+                    <tr data-id="{{ cart.id }}" data-name="{{ cart.order.reference | t('site') }}" style="font-size: 13px;">
                         <td scope="row" data-title="{{ 'Order' | t('app') }}">
-                            <a class="nav-anchor" href="{{ url('commerce/orders/' ~ cart.order[0].id) }}">{{ "View" | t('app') }}</a>
+                            <a class="nav-anchor" href="{{ url('commerce/orders/' ~ cart.order.id) }}">{{ "View" | t('app') }}</a>
                         </td>
                         <td scope="row" data-title="{{ 'Customer' | t('app') }}" class="">
-                            {% if cart.order[0].customer.userId|length %}
-                                <a class="nav-anchor" href="{{ url('admin/users/' ~ cart.order[0].customer.id) }}">{{ cart.email }}</a>
+                            {% if cart.order.customer.userId|length %}
+                                <a class="nav-anchor" href="{{ url('admin/users/' ~ cart.order.customer.id) }}">{{ cart.email }}</a>
                             {% else %}
                                 {{ cart.email }}
                             {% endif %}
                         </td>
-                        <td scope="row" data-title="{{ 'Total' | t('app') }}" class="">{{ cart.order[0].totalPrice|commerceCurrency(cart.order[0].currency) }}</td>
+                        <td scope="row" data-title="{{ 'Total' | t('app') }}" class="">{{ cart.order.totalPrice|commerceCurrency(cart.order.currency) }}</td>
                         <td scope="row" data-title="{{ '1st Reminder' | t('app') }}" class="">
                             {% if cart.firstReminder %}
                                 <div class="status green"></div>
