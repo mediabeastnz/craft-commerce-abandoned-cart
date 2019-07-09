@@ -82,6 +82,7 @@ class BaseController extends Controller
         } else {
             return $this->renderTemplate('abandoned-cart/index', [
                 'carts' => false,
+                'testMode' => AbandonedCart::$plugin->getSettings()->testMode,
                 'totalRecovered' => AbandonedCart::$plugin->carts->getAbandonedCartsRecovered(),
                 'conversionRate' => AbandonedCart::$plugin->carts->getAbandondedCartsConversion(),
                 'passKey' => AbandonedCart::$plugin->getSettings()->passKey
