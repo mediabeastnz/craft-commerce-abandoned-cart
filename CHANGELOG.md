@@ -1,5 +1,9 @@
 # Release Notes for Abandoned Cart
 
+## 1.3.4 - 2019-08-05
+### Fixed
+- Removed cart variable from default example templates. Users using the default templates were experiencing issues with sessions
+
 ## 1.3.3 - 2019-08-05
 ### Changed
 - Updated dashboard to show last updated date from the order and not the abandoned cart record
@@ -19,13 +23,13 @@
 
 ## 1.3.0 - 2019-06-08
 ### Added
-- Jobs can be triggered via a URL now using a secret key. This means people without access to cron jobs can use this plugin.
+- Jobs can be triggered via a URL now using a secret key. This means people without access to cron jobs can use this plugin
 - Added setting for a configurable secret key which is used to verify job requests
 
 ## 1.2.0 - 2019-06-08
 ### Added
 - Test Mode 🎉 Test mode allows the queue to be bypassed and emails to instantly be sent allowing for quicker and easier testing
-- Default email templates now include `{% set cart = craft.commerce.carts.cart %}` so that commerce helper functions like `|currency` can be used.
+- Default email templates now include `{% set cart = craft.commerce.carts.cart %}` so that commerce helper functions like `|currency` can be used
 
 ## 1.1.6 - 2019-06-04
 ### Added
@@ -36,7 +40,7 @@
 - New plugin icon 🎉
 
 ### Fixed
-- Fixed the issue [#14] which involved abandoned carts with no email addresses. I've submitted a pull request to Craft Commerce to change how emails are stored when an order is first created.
+- Fixed the issue [#14] which involved abandoned carts with no email addresses. I've submitted a pull request to Craft Commerce to change how emails are stored when an order is first created
 
 [#14]: https://github.com/mediabeastnz/craft-commerce-abandoned-cart/issues/14
 
