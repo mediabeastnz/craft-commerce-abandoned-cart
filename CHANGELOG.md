@@ -1,5 +1,10 @@
 # Release Notes for Abandoned Cart
 
+## 1.3.3 - 2019-08-05
+### Changed
+- Updated dashboard to show last updated date from the order and not the abandoned cart record
+- Added order reference to dashboard table
+
 ## 1.3.2 - 2019-07-10
 ### Fixed
 - Fixed an issue where test mode was not set on the dashboard when no orders have yet been abandoned

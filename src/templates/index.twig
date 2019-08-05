@@ -67,7 +67,7 @@
                     {% if cart.order|length %}
                     <tr data-id="{{ cart.id }}" data-name="{{ cart.order.reference | t('site') }}" style="font-size: 13px;">
                         <td scope="row" data-title="{{ 'Order' | t('app') }}">
-                            <a class="nav-anchor" href="{{ url('commerce/orders/' ~ cart.order.id) }}">{{ "View" | t('app') }}</a>
+                            <a class="nav-anchor" href="{{ url('commerce/orders/' ~ cart.order.id) }}">{{ cart.order.number[:7] }}</a>
                         </td>
                         <td scope="row" data-title="{{ 'Customer' | t('app') }}" class="">
                             {% if cart.order.customer.userId|length %}
@@ -118,7 +118,7 @@
                             {{ status }}
                         </td>
                         <td scope="row" data-title="{{ 'Order' | t('app') }}">
-                            {{cart.dateUpdated|datetime('short') }}
+                            {{cart.order.dateUpdated|datetime('short') }}
                         </td>
                     </tr>
                     {% else %}
