@@ -1,5 +1,9 @@
 # Release Notes for Abandoned Cart
 
+## 1.3.5 - 2019-08-08
+### Changed
+- The from email and name that get pulled from systems settings are now parsed through Crafts environment function for people that were using environment variables in settings.
+
 ## 1.3.4 - 2019-08-05
 ### Fixed
 - Removed cart variable from default example templates. Users using the default templates were experiencing issues with sessions

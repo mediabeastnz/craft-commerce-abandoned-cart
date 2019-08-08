@@ -272,7 +272,7 @@ class Carts extends Component
         
         // build the email
         $newEmail = new Message();
-        $newEmail->setFrom([$settings['fromEmail'] => $settings['fromName']]);
+        $newEmail->setFrom([Craft::parseEnv($settings['fromEmail']) => Craft::parseEnv($settings['fromName'])]);
         $newEmail->setTo($recipient);
         $newEmail->setSubject($subject);
         $newEmail->setHtmlBody($emailBody);
