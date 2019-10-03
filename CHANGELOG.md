@@ -1,5 +1,9 @@
 # Release Notes for Abandoned Cart
 
+## 1.3.6 - 2019-04-10
+### Fixed
+- Minor fix from @billythekid for reocvery url not being set for incomplete orders.
+
 ## 1.3.5 - 2019-08-08
 ### Changed
 - The from email and name that get pulled from systems settings are now parsed through Crafts environment function for people that were using environment variables in settings.
