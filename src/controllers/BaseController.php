@@ -188,11 +188,11 @@ class BaseController extends Controller
         // find the order
         $number = $request->getParam('number');
         $order = Order::find()->number($number)->one();
-
+        
+        // get custom restore url
+        $recoveryUrl = AbandonedCart::$plugin->getSettings()->recoveryUrl;
+        
         if ($order && !$order->isCompleted){
-
-            // get custom restore url
-            $recoveryUrl = AbandonedCart::$plugin->getSettings()->recoveryUrl;
 
             // check if abandoned cart expiry time is valid
             $expiry = AbandonedCart::$plugin->getSettings()->restoreExpiryHours;
