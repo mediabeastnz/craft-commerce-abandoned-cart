@@ -47,7 +47,8 @@ class AbandonedCart extends Plugin
                 'abandoned-cart' => 'abandoned-cart/base/index',
                 'abandoned-cart/dashboard' => 'abandoned-cart/base/index',
                 'abandoned-cart/settings' => 'abandoned-cart/base/settings',
-                'abandoned-cart/find-carts' => 'abandoned-cart/base/index'
+                'abandoned-cart/find-carts' => 'abandoned-cart/base/index',
+                'abandoned-cart/export' => 'abandoned-cart/base/export'
             ]);
         });
 

@@ -23,7 +23,7 @@
 {# The content of the CP Section#}
 {% set content %}
     
-    <div class="flex" style="align-items: end; margin: 20px auto;">
+    <div class="flex" style="align-items: start; margin: 40px auto;">
         <div class="flex-grow">
             <div class="field">
                 <div class="heading">
@@ -33,6 +33,7 @@
                         If a new cart is found it will be marked as scheduled and added to the queue.<br />
                         Items in the queue will be scheduled as per your settings.
                         </p>
+                        <p>View all abandoned carts as json (useful for creating reports) - <a target="_blank" href="{{ url('/actions/abandoned-cart/base/export') }}">{{ 'View all' | t('app') }}</a>
                     </div>
                 </div>
             </div>
@@ -86,12 +87,16 @@
                             {{ cart.prettyFirstReminder }}
                         </td>
                         <td scope="row" data-title="{{ '2nd Reminder' | t('app') }}" class="">
-                            {% if cart.secondReminder %}
-                                <div class="status green"></div>
+                            {% if secondReminderDisabled %}
+                                <em>Disabled</em>
                             {% else %}
-                                <div class="status orange"></div>
+                                {% if cart.secondReminder %}
+                                    <div class="status green"></div>
+                                {% else %}
+                                    <div class="status orange"></div>
+                                {% endif %}
+                                {{ cart.prettySecondReminder }}
                             {% endif %}
-                            {{ cart.prettySecondReminder }}
                         </td>
                         <td scope="row" data-title="{{ 'Clicked' | t('app') }}" class="">
                             {% if cart.clicked %}

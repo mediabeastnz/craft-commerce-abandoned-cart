@@ -1,5 +1,11 @@
 # Release Notes for Abandoned Cart
 
+## 1.4.0 - 2020-02-15
+### Added
+- The 2nd reminder can now be disabled so that only one reminder is sent.
+- Added the simple ability to view all abandoned carts as json. This includes basic order and product details.
+- Now tested with Craft 3.4+ and Commerce 3.0+
+
 ## 1.3.6 - 2019-04-10
 ### Fixed
 - Minor fix from @billythekid for reocvery url not being set for incomplete orders.

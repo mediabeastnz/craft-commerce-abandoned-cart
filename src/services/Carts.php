@@ -56,6 +56,8 @@ class Carts extends Component
         $firstDelayInSeconds = $firstDelay * 3600;
         $secondDelayInSeconds = $secondDelay * 3600;
 
+        $secondReminderDisabled = AbandonedCart::$plugin->getSettings()->disableSecondReminder;
+
         if ($carts && ($carts) > 0) {
             $i = 0;
             foreach ($carts as $cart) {
@@ -76,7 +78,8 @@ class Carts extends Component
 
                 // if it's the 2nd time being scheduled then mark as scheduled again
                 // and then push it to the queue based on $secondReminderDelay setting
-                } elseif ($cart->secondReminder == 0) {
+                // this wont get triggered if 2nd is disabled via settings
+                } elseif ($cart->secondReminder == 0 && !$secondReminderDisabled) {
 
                     Craft::$app->queue->delay($secondDelayInSeconds)->push(new SendEmailReminder([
                         'cartId' => $cart->id, 

@@ -35,6 +35,8 @@ class Settings extends Model
 
     public $recoveryUrl = "shop/cart";
 
+    public $disableSecondReminder = false;
+
     public function __construct() 
     {
         if (empty($this->passKey)) {

@@ -26,7 +26,8 @@ class BaseController extends Controller
 
     protected $allowAnonymous = [
         'restore-cart',
-        'find-carts'
+        'find-carts',
+        'export'
     ];
 
     // Public Methods
@@ -75,6 +76,7 @@ class BaseController extends Controller
                     'nextUrl' => $page->getNextUrl(),
                 ],
                 'testMode' => AbandonedCart::$plugin->getSettings()->testMode,
+                'secondReminderDisabled' => AbandonedCart::$plugin->getSettings()->disableSecondReminder,
                 'totalRecovered' => AbandonedCart::$plugin->carts->getAbandonedCartsRecovered(),
                 'conversionRate' => AbandonedCart::$plugin->carts->getAbandondedCartsConversion(),
                 'passKey' => AbandonedCart::$plugin->getSettings()->passKey
@@ -83,6 +85,7 @@ class BaseController extends Controller
             return $this->renderTemplate('abandoned-cart/index', [
                 'carts' => false,
                 'testMode' => AbandonedCart::$plugin->getSettings()->testMode,
+                'secondReminderDisabled' => AbandonedCart::$plugin->getSettings()->disableSecondReminder,
                 'totalRecovered' => AbandonedCart::$plugin->carts->getAbandonedCartsRecovered(),
                 'conversionRate' => AbandonedCart::$plugin->carts->getAbandondedCartsConversion(),
                 'passKey' => AbandonedCart::$plugin->getSettings()->passKey
@@ -233,6 +236,50 @@ class BaseController extends Controller
             return $this->redirect($recoveryUrl);
         }
         return $this->redirect('shop/cart');
+    }
+
+    public function actionExport()
+    {
+        $carts = CartRecord::find()->all();
+        $results = [];
+        if ($carts) {
+            foreach ($carts as $cart) {
+
+                $results[$cart->id] = [
+                    "id" => $cart->id,
+                    "order" => [
+                        'id' => $cart->orderId
+                    ],
+                    "email" => $cart->email,
+                    "clicked" => $cart->clicked,
+                    "recovered" => $cart->isRecovered,
+                    "created" => $cart->dateCreated,
+                    "updated" => $cart->dateUpdated
+                ];
+
+                if ($cart->orderId) {
+                    $order = Order::find()->id($cart->orderId)->one();
+                    if ($order) {
+                        // get order details
+                        $results[$cart->id]['order']['total'] = $order->totalPrice;
+                        if ($order->lineItems) {
+                            foreach ($order->lineItems as $item) {
+                                $results[$cart->id]['order']['items'][$item->purchasableId] = [
+                                    "title" => $item->purchasable->title,
+                                    "sku" => $item->sku,
+                                    "purchasableId" => $item->purchasableId,
+                                    "total" => $item->total,
+                                    "qty" => $item->qty
+                                ];
+                            }
+                        }
+                    }
+                }
+                
+            }
+        }
+
+        return $this->asJson($results);
     }
 
 }
