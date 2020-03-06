@@ -1,5 +1,9 @@
 # Release Notes for Abandoned Cart
 
+## 1.4.1 - 2020-03-07
+### Fixed
+- Fixed an issue relating to disabling 2nd reminder from `1.4.0`
+
 ## 1.4.0 - 2020-02-15
 ### Added
 - The 2nd reminder can now be disabled so that only one reminder is sent.

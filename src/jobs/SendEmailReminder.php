@@ -46,6 +46,7 @@ class SendEmailReminder extends BaseJob
             $secondTemplate = AbandonedCart::$plugin->getSettings()->secondReminderTemplate;
             $firstSubject = AbandonedCart::$plugin->getSettings()->firstReminderSubject;
             $secondSubject = AbandonedCart::$plugin->getSettings()->secondReminderSubject;
+            $secondReminderDisabled = AbandonedCart::$plugin->getSettings()->disableSecondReminder;
             
             if ($cart && $cart->isRecovered == 0) {
                 

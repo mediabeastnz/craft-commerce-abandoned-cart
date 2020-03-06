@@ -1,8 +1,8 @@
 {
     "name": "mediabeastnz/craft-commerce-abandoned-cart",
-    "description": "Abandoned Cart plugin for Craft Commerce 2",
+    "description": "Abandoned Cart for Craft Commerce",
     "type": "craft-plugin",
-    "version": "1.4.0",
+    "version": "1.4.1",
     "keywords": [
         "craft",
         "cms",
@@ -30,7 +30,7 @@
         }
     },
     "extra": {
-        "name": "Abandoned Cart for Craft Commerce 2",
+        "name": "Abandoned Cart for Craft Commerce",
         "handle": "abandoned-cart",
         "hasCpSettings": true,
         "hasCpSection": true,

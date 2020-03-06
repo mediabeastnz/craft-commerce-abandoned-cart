@@ -1,6 +1,6 @@
-<p align="center"><a href="https://plugins.craftcms.com/abandoned-cart" target="_blank"><img src="./src/icon.svg" width="100" height="100" alt="Abandoned Cart plugin for Craft Commerce 2"></a></p>
+<p align="center"><a href="https://plugins.craftcms.com/abandoned-cart" target="_blank"><img src="./src/icon.svg" width="100" height="100" alt="Abandoned Cart for Craft Commerce"></a></p>
 
-# Abandoned Cart plugin for Craft Commerce 2
+# Abandoned Cart for Craft Commerce
 
 ## Requirements
 
@@ -8,7 +8,7 @@ This plugin requires Craft CMS 3.0.0 or later as well as Craft Commerce 2.0.0 or
 
 ## Abandoned Cart Overview
 
-Abandoned Cart for Craft Commerce 2 is a plugin that provides the ability to send multiple email
+Abandoned Cart for Craft Commerce is a plugin that provides the ability to send multiple email
 reminders to customers that have abandoned their carts. This is a proven way to increase what would normally be lost revenue.
 
 Abandoned Carts will send a maximum of two emails, these emails can be configured to be sent after a certain amount of hours.
