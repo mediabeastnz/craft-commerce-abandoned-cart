@@ -25,9 +25,7 @@ class BaseController extends Controller
 {
 
     protected $allowAnonymous = [
-        'restore-cart',
-        'find-carts',
-        'export'
+        'restore-cart'
     ];
 
     // Public Methods
@@ -78,7 +76,9 @@ class BaseController extends Controller
                 'testMode' => AbandonedCart::$plugin->getSettings()->testMode,
                 'secondReminderDisabled' => AbandonedCart::$plugin->getSettings()->disableSecondReminder,
                 'totalRecovered' => AbandonedCart::$plugin->carts->getAbandonedCartsRecovered(),
+                'totalRecoveredMonth' => AbandonedCart::$plugin->carts->getAbandonedCartsRecoveredThisMonth(),
                 'conversionRate' => AbandonedCart::$plugin->carts->getAbandondedCartsConversion(),
+                'totalCartsRecovered' => AbandonedCart::$plugin->carts->getAbandonedCartsRecoveredCount(),
                 'passKey' => AbandonedCart::$plugin->getSettings()->passKey
             ]);
         } else {

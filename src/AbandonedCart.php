@@ -9,9 +9,11 @@ namespace mediabeastnz\abandonedcart;
 use mediabeastnz\abandonedcart\models\Settings;
 use mediabeastnz\abandonedcart\services\Carts;
 use mediabeastnz\abandonedcart\variables\AbandonedCartVariable;
+use mediabeastnz\abandonedcart\widgets\TotalCartsRecovered;
 
 use Craft;
 use craft\base\Plugin;
+use craft\services\Dashboard;
 use craft\web\UrlManager;
 use craft\services\Plugins;
 use craft\services\Elements;
@@ -78,6 +80,10 @@ class AbandonedCart extends Plugin
         Event::on(CraftVariable::class, CraftVariable::EVENT_INIT, function(Event $event) {
             $variable = $event->sender;
             $variable->set('abandonedcart', AbandonedCartVariable::class);
+        });
+
+        Event::on(Dashboard::class, Dashboard::EVENT_REGISTER_WIDGET_TYPES, function(RegisterComponentTypesEvent $event) {
+            $event->types[] = TotalCartsRecovered::class;
         });
 
         Craft::info(

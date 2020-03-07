@@ -171,6 +171,7 @@ class Carts extends Component
         return $this->_createAbandonedCartsQuery()->count();
     }
 
+
     public function getAbandonedCartsRecovered()
     {
         $ids = $this->_createAbandonedCartsQuery()
@@ -184,6 +185,33 @@ class Carts extends Component
                 ->column();
             return $orders[0];
         }
+        return false;
+    }
+
+    public function getAbandonedCartsRecoveredThisMonth()
+    {
+        $ids = $this->_createAbandonedCartsQuery()
+            ->select('orderId')
+            ->where(['isRecovered' => 1])
+            ->andWhere('MONTH(dateUpdated) = MONTH(CURDATE())')
+            ->column();
+        if($ids) {
+            $orders = Order::find()
+                ->where(['commerce_orders.id' => $ids])
+                ->select('SUM(totalPrice) as total')
+                ->column();
+            return $orders[0];
+        }
+        return false;
+    }
+
+    public function getAbandonedCartsRecoveredCount()
+    {
+        $ids = $this->_createAbandonedCartsQuery()
+            ->select('orderId')
+            ->where(['isRecovered' => 1])
+            ->column();
+        return count($ids);
         return false;
     }
 

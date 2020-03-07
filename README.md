@@ -4,7 +4,7 @@
 
 ## Requirements
 
-This plugin requires Craft CMS 3.0.0 or later as well as Craft Commerce 2.0.0 or later.
+This plugin requires Craft Commerce 3.0.0 or later.
 
 ## Abandoned Cart Overview
 
