@@ -1,11 +1,12 @@
 # Release Notes for Abandoned Cart
 
-## 1.5.0 - 2020-03-07
+## 1.5.1 - 2020-03-09
 ### Added
-- New widget using Commerce 3 stats. Allows you to view recovered total based on date range.
 - Minor tweaks to dashboard stats and layout.
 
+## 1.5.0 - 2020-03-07
 ### Changed
+- New widget using Commerce 3 stats. Allows you to view recovered total based on date range.
 - Plugin now required Commerce 3.0+ which also means Craft CMS 3.4+ is required.
 
 ## 1.4.1 - 2020-03-07
