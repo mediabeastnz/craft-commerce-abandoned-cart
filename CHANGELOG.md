@@ -1,5 +1,9 @@
 # Release Notes for Abandoned Cart
 
+## 1.5.2 - 2020-03-10
+### Changed
+- Tweaks to composer requirements
+
 ## 1.5.1 - 2020-03-09
 ### Added
 - Minor tweaks to dashboard stats and layout.
