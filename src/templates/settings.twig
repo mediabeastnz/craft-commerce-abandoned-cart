@@ -132,6 +132,13 @@
     errors: settings.getErrors('recoveryUrl')
 }) }}
 
+{{ forms.textField({
+    label: "Blacklisted Emails",
+    name: 'blacklist',
+    value: settings.blacklist,
+    instructions: 'Enter emails seperated by a comma that should be ignored.',
+    errors: settings.getErrors('blacklist')
+}) }}
 
 {% endnamespace %}
 

@@ -88,6 +88,8 @@ class BaseController extends Controller
                 'secondReminderDisabled' => AbandonedCart::$plugin->getSettings()->disableSecondReminder,
                 'totalRecovered' => AbandonedCart::$plugin->carts->getAbandonedCartsRecovered(),
                 'conversionRate' => AbandonedCart::$plugin->carts->getAbandondedCartsConversion(),
+                'totalRecoveredMonth' => AbandonedCart::$plugin->carts->getAbandonedCartsRecoveredThisMonth(),
+                'totalCartsRecovered' => AbandonedCart::$plugin->carts->getAbandonedCartsRecoveredCount(),
                 'passKey' => AbandonedCart::$plugin->getSettings()->passKey
             ]);
         }  

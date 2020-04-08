@@ -125,7 +125,10 @@ class Carts extends Component
     // But no further back than 12 hours
     // Note: Commerce::purgeInactiveCartsDuration() may come into play here.
     public function getAbandonedOrders($start = '1', $end = '12')
-    {        
+    {     
+
+        $blacklist = AbandonedCart::$plugin->getSettings()->blacklist;
+
         // Find orders that fit the criteria
         $carts = Order::find();
         $carts->where('commerce_orders.dateUpdated <= DATE_ADD(NOW(), INTERVAL - '.$start.' HOUR)');
@@ -133,6 +136,9 @@ class Carts extends Component
         $carts->andWhere('totalPrice > 0');
         $carts->andWhere('isCompleted = 0');
         $carts->andWhere('email != ""');
+        if (isset($blacklist)) {
+            $carts->andWhere('email NOT IN ("'.$blacklist.'")');
+        }
         $carts->orderBy('commerce_orders.dateUpdated desc');
         $carts->all();
         return $carts;

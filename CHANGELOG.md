@@ -1,5 +1,10 @@
 # Release Notes for Abandoned Cart
 
+## 1.5.3 - 2020-04-08
+### Added
+- Emails can now be blacklisted. Simply a comma seperated list of emails to be ingored.
+- Minor fix for empty dashboard state
+
 ## 1.5.2 - 2020-03-10
 ### Changed
 - Tweaks to composer requirements
