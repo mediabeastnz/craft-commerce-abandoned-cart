@@ -3,6 +3,8 @@
 
 {% set selectedSubnavItem = 'dashboard' %}
 
+{% set baseCurrency = craft.commerce.getPaymentCurrencies().getPrimaryPaymentCurrencyIso() %}
+
 {# The URL to this plugin's base CP section #}
 {% set pluginCpUrl = url('abandoned-cart') %}
 
@@ -40,11 +42,11 @@
             <div class="flex flex-grow" style="text-align: center; flex-direction: row; flex-wrap: wrap;">
                 <div class="flex-grow">
                     <h3 style="color: #8f98a3;">Total Recovered</h3>
-                    <h1>${{ totalRecovered|number_format(2, '.', ',') }}</h1>
+                    <h1>{{ totalRecovered|commerceCurrency(baseCurrency) }}</h1>
                 </div>
                 <div class="flex-grow">
                     <h3 style="color: #8f98a3;">Recovered This Month</h3>
-                    <h1>${{ totalRecoveredMonth|number_format(2, '.', ',') }}</h1>
+                    <h1>{{ totalRecoveredMonth|commerceCurrency(baseCurrency) }}</h1>
                 </div>
             </div>
             <div class="flex flex-grow" style="text-align: center; flex-direction: row; flex-wrap: wrap; margin-top: 10px;">
