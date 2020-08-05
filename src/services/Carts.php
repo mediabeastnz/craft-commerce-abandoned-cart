@@ -142,8 +142,8 @@ class Carts extends Component
         $dateUpdatedEnd->sub(new DateInterval('PT'.$end.'H'));
 
         $carts = Order::find();
-        $carts->dateUpdated(['and', '<= '.$dateUpdatedStart->format('Y-m-d H:i:s'), '>= '.$dateUpdatedEnd->format('Y-m-d H:i:s')]);
-        $carts->andWhere('totalPrice > 0');
+        $carts->where(['<=', 'commerce_orders.dateUpdated', $dateUpdatedStart->format('Y-m-d H:i:s')]);
+        $carts->andWhere(['>=', 'commerce_orders.dateUpdated', $dateUpdatedEnd->format('Y-m-d H:i:s')]);        $carts->andWhere('totalPrice > 0');
         $carts->andWhere('isCompleted = 0');
         $carts->andWhere('email != ""');
         if (isset($blacklist)) {
