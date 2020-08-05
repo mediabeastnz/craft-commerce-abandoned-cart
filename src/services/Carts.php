@@ -15,7 +15,9 @@ use Craft;
 use craft\db\Query;
 use craft\mail\Message;
 use craft\commerce\elements\Order;
-
+use DateInterval;
+use DateTime;
+use DateTimeZone;
 use yii\base\Component;
 
 class Carts extends Component
@@ -62,12 +64,12 @@ class Carts extends Component
             $i = 0;
             foreach ($carts as $cart) {
 
-                // if it's the 1st time being scheduled then mark as scheduled 
+                // if it's the 1st time being scheduled then mark as scheduled
                 // and then push it to the queue based on $firstReminderDelay setting
                 if ($cart->firstReminder == 0) {
 
                     Craft::$app->queue->delay($firstDelayInSeconds)->push(new SendEmailReminder([
-                        'cartId' => $cart->id, 
+                        'cartId' => $cart->id,
                         'reminder' => 1
                     ]));
 
@@ -82,7 +84,7 @@ class Carts extends Component
                 } elseif ($cart->secondReminder == 0 && !$secondReminderDisabled) {
 
                     Craft::$app->queue->delay($secondDelayInSeconds)->push(new SendEmailReminder([
-                        'cartId' => $cart->id, 
+                        'cartId' => $cart->id,
                         'reminder' => 2
                     ]));
 
@@ -120,19 +122,27 @@ class Carts extends Component
         }
         return false;
     }
-    
+
     // Get all abandoned commerce orders that have been inactive for more than 1hr
     // But no further back than 12 hours
     // Note: Commerce::purgeInactiveCartsDuration() may come into play here.
     public function getAbandonedOrders($start = '1', $end = '12')
-    {     
+    {
 
         $blacklist = AbandonedCart::$plugin->getSettings()->blacklist;
 
         // Find orders that fit the criteria
+        $UTC = new DateTimeZone("UTC");
+        $dateUpdatedStart = new DateTime();
+        $dateUpdatedStart->setTimezone($UTC);
+        $dateUpdatedStart->sub(new DateInterval('PT'.$start.'H'));
+
+        $dateUpdatedEnd = new DateTime();
+        $dateUpdatedEnd->setTimezone($UTC);
+        $dateUpdatedEnd->sub(new DateInterval('PT'.$end.'H'));
+
         $carts = Order::find();
-        $carts->where('commerce_orders.dateUpdated <= DATE_ADD(NOW(), INTERVAL - '.$start.' HOUR)');
-        $carts->andWhere('commerce_orders.dateUpdated >= DATE_ADD(NOW(), INTERVAL - '.$end.' HOUR)');
+        $carts->dateUpdated(['and', '<= '.$dateUpdatedStart->format('Y-m-d H:i:s'), '>= '.$dateUpdatedEnd->format('Y-m-d H:i:s')]);
         $carts->andWhere('totalPrice > 0');
         $carts->andWhere('isCompleted = 0');
         $carts->andWhere('email != ""');
@@ -153,7 +163,7 @@ class Carts extends Component
         } else {
             $rows = $this->_createAbandonedCartsQuery()->all();
         }
-    
+
         $carts = [];
 
         foreach ($rows as $row) {
@@ -248,13 +258,13 @@ class Carts extends Component
      * @return bool $result
      */
     public function sendMail($cart, $subject, $recipient = null, $templatePath = null): bool
-    {        
+    {
         // settings/defaults
         $view = Craft::$app->getView();
         $oldTemplateMode = $view->getTemplateMode();
         $originalLanguage = Craft::$app->language;
 
-        if (strpos($templatePath, "abandoned-cart/emails") !== false) { 
+        if (strpos($templatePath, "abandoned-cart/emails") !== false) {
             $view->setTemplateMode($view::TEMPLATE_MODE_CP);
         } else {
             $view->setTemplateMode($view::TEMPLATE_MODE_SITE);
@@ -306,7 +316,7 @@ class Carts extends Component
 
         // Get from address from site settings
         $settings = Craft::$app->systemSettings->getSettings('email');
-        
+
         // build the email
         $newEmail = new Message();
         $newEmail->setFrom([Craft::parseEnv($settings['fromEmail']) => Craft::parseEnv($settings['fromName'])]);
