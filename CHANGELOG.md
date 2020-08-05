@@ -1,5 +1,11 @@
 # Release Notes for Abandoned Cart
 
+## 1.5.4 - 2020-08-06
+### Fixed
+- Fixed an issue relating to blacklisting emails
+- Fixed an issues relating to timezones
+- Merged a few simple pull requests
+
 ## 1.5.3 - 2020-04-08
 ### Added
 - Emails can now be blacklisted. Simply a comma seperated list of emails to be ingored.
