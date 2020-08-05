@@ -152,7 +152,6 @@ class Carts extends Component
         }
         $carts->orderBy('commerce_orders.dateUpdated desc');
         $carts->all();
-        dd($carts->count());
         return $carts;
     }
 
