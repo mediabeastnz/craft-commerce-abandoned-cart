@@ -130,6 +130,7 @@ class Carts extends Component
     {
 
         $blacklist = AbandonedCart::$plugin->getSettings()->blacklist;
+        $blacklist = explode(',',$blacklist);
 
         // Find orders that fit the criteria
         $UTC = new DateTimeZone("UTC");
@@ -151,6 +152,7 @@ class Carts extends Component
         }
         $carts->orderBy('commerce_orders.dateUpdated desc');
         $carts->all();
+        dd($carts->count());
         return $carts;
     }
 
