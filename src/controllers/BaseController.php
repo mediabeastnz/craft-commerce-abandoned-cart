@@ -85,7 +85,7 @@ class BaseController extends Controller
             return $this->renderTemplate('abandoned-cart/index', [
                 'carts' => false,
                 'testMode' => Craft::parseEnv(AbandonedCart::$plugin->getSettings()->testMode),
-                'secondReminderDisabled' => Craft::parseEnv(bandonedCart::$plugin->getSettings()->disableSecondReminder),
+                'secondReminderDisabled' => Craft::parseEnv(AbandonedCart::$plugin->getSettings()->disableSecondReminder),
                 'totalRecovered' => AbandonedCart::$plugin->carts->getAbandonedCartsRecovered(),
                 'conversionRate' => AbandonedCart::$plugin->carts->getAbandondedCartsConversion(),
                 'totalRecoveredMonth' => AbandonedCart::$plugin->carts->getAbandonedCartsRecoveredThisMonth(),
