@@ -73,24 +73,24 @@ class BaseController extends Controller
                     'prevUrl' => $page->getPrevUrl(),
                     'nextUrl' => $page->getNextUrl(),
                 ],
-                'testMode' => AbandonedCart::$plugin->getSettings()->testMode,
-                'secondReminderDisabled' => AbandonedCart::$plugin->getSettings()->disableSecondReminder,
+                'testMode' => Craft::parseEnv(AbandonedCart::$plugin->getSettings()->testMode),
+                'secondReminderDisabled' => Craft::parseEnv(AbandonedCart::$plugin->getSettings()->disableSecondReminder),
                 'totalRecovered' => AbandonedCart::$plugin->carts->getAbandonedCartsRecovered(),
                 'totalRecoveredMonth' => AbandonedCart::$plugin->carts->getAbandonedCartsRecoveredThisMonth(),
                 'conversionRate' => AbandonedCart::$plugin->carts->getAbandondedCartsConversion(),
                 'totalCartsRecovered' => AbandonedCart::$plugin->carts->getAbandonedCartsRecoveredCount(),
-                'passKey' => AbandonedCart::$plugin->getSettings()->passKey
+                'passKey' => Craft::parseEnv(AbandonedCart::$plugin->getSettings()->passKey)
             ]);
         } else {
             return $this->renderTemplate('abandoned-cart/index', [
                 'carts' => false,
-                'testMode' => AbandonedCart::$plugin->getSettings()->testMode,
-                'secondReminderDisabled' => AbandonedCart::$plugin->getSettings()->disableSecondReminder,
+                'testMode' => Craft::parseEnv(AbandonedCart::$plugin->getSettings()->testMode),
+                'secondReminderDisabled' => Craft::parseEnv(bandonedCart::$plugin->getSettings()->disableSecondReminder),
                 'totalRecovered' => AbandonedCart::$plugin->carts->getAbandonedCartsRecovered(),
                 'conversionRate' => AbandonedCart::$plugin->carts->getAbandondedCartsConversion(),
                 'totalRecoveredMonth' => AbandonedCart::$plugin->carts->getAbandonedCartsRecoveredThisMonth(),
                 'totalCartsRecovered' => AbandonedCart::$plugin->carts->getAbandonedCartsRecoveredCount(),
-                'passKey' => AbandonedCart::$plugin->getSettings()->passKey
+                'passKey' => Craft::parseEnv(AbandonedCart::$plugin->getSettings()->passKey)
             ]);
         }  
     }
@@ -102,12 +102,12 @@ class BaseController extends Controller
         $browser = AbandonedCart::$plugin->carts->getBrowserName($request->getUserAgent());
 
         // get settings
-        $testMode = AbandonedCart::$plugin->getSettings()->testMode;
-        $passKey = AbandonedCart::$plugin->getSettings()->passKey;
-        $firstTemplate = AbandonedCart::$plugin->getSettings()->firstReminderTemplate;
-        $secondTemplate = AbandonedCart::$plugin->getSettings()->secondReminderTemplate;
-        $firstSubject = AbandonedCart::$plugin->getSettings()->firstReminderSubject;
-        $secondSubject = AbandonedCart::$plugin->getSettings()->secondReminderSubject;
+        $testMode = Craft::parseEnv(AbandonedCart::$plugin->getSettings()->testMode);
+        $passKey = Craft::parseEnv(AbandonedCart::$plugin->getSettings()->passKey);
+        $firstTemplate = Craft::parseEnv(AbandonedCart::$plugin->getSettings()->firstReminderTemplate);
+        $secondTemplate = Craft::parseEnv(AbandonedCart::$plugin->getSettings()->secondReminderTemplate);
+        $firstSubject = Craft::parseEnv(AbandonedCart::$plugin->getSettings()->firstReminderSubject);
+        $secondSubject = Craft::parseEnv(AbandonedCart::$plugin->getSettings()->secondReminderSubject);
 
         // check if passkey in url matches settings
         $proceed = $passkeyFromRequest == $passKey;
@@ -195,12 +195,12 @@ class BaseController extends Controller
         $order = Order::find()->number($number)->one();
         
         // get custom restore url
-        $recoveryUrl = AbandonedCart::$plugin->getSettings()->recoveryUrl;
+        $recoveryUrl = Craft::parseEnv(AbandonedCart::$plugin->getSettings()->recoveryUrl);
         
         if ($order && !$order->isCompleted){
 
             // check if abandoned cart expiry time is valid
-            $expiry = AbandonedCart::$plugin->getSettings()->restoreExpiryHours;
+            $expiry = Craft::parseEnv(AbandonedCart::$plugin->getSettings()->restoreExpiryHours);
             $abandonedCartRecord = AbandonedCart::$plugin->carts->getAbandonedCartByOrderId($order->id);
 
             if($abandonedCartRecord) {

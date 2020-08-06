@@ -28,7 +28,7 @@ class Carts extends Component
 
     public function getEmailsToSend()
     {
-        $testMode = AbandonedCart::$plugin->getSettings()->testMode;
+        $testMode = Craft::parseEnv(AbandonedCart::$plugin->getSettings()->testMode);
         // get abandoned carts
         $carts = $this->getAbandonedOrders();
         // create any new carts
@@ -52,13 +52,13 @@ class Carts extends Component
         // Completed being: reminders have already been sent
         $carts = CartRecord::find()->where('isScheduled = 0')->all();
 
-        $firstDelay = AbandonedCart::$plugin->getSettings()->firstReminderDelay;
-        $secondDelay = AbandonedCart::$plugin->getSettings()->secondReminderDelay;
+        $firstDelay = Craft::parseEnv(AbandonedCart::$plugin->getSettings()->firstReminderDelay);
+        $secondDelay = Craft::parseEnv(AbandonedCart::$plugin->getSettings()->secondReminderDelay);
 
         $firstDelayInSeconds = $firstDelay * 3600;
         $secondDelayInSeconds = $secondDelay * 3600;
 
-        $secondReminderDisabled = AbandonedCart::$plugin->getSettings()->disableSecondReminder;
+        $secondReminderDisabled = Craft::parseEnv(AbandonedCart::$plugin->getSettings()->disableSecondReminder);
 
         if ($carts && ($carts) > 0) {
             $i = 0;
@@ -129,8 +129,10 @@ class Carts extends Component
     public function getAbandonedOrders($start = '1', $end = '12')
     {
 
-        $blacklist = AbandonedCart::$plugin->getSettings()->blacklist;
-        $blacklist = explode(',',$blacklist);
+        $blacklist = Craft::parseEnv(AbandonedCart::$plugin->getSettings()->blacklist);
+        if (!empty($blacklist)) {
+            $blacklist = explode(',',$blacklist);
+        }
 
         // Find orders that fit the criteria
         $UTC = new DateTimeZone("UTC");
@@ -144,11 +146,12 @@ class Carts extends Component
 
         $carts = Order::find();
         $carts->where(['<=', 'commerce_orders.dateUpdated', $dateUpdatedStart->format('Y-m-d H:i:s')]);
-        $carts->andWhere(['>=', 'commerce_orders.dateUpdated', $dateUpdatedEnd->format('Y-m-d H:i:s')]);        $carts->andWhere('totalPrice > 0');
+        $carts->andWhere(['>=', 'commerce_orders.dateUpdated', $dateUpdatedEnd->format('Y-m-d H:i:s')]);        
+        $carts->andWhere('totalPrice > 0');
         $carts->andWhere('isCompleted = 0');
         $carts->andWhere('email != ""');
-        if (isset($blacklist)) {
-            $carts->andWhere('email NOT IN ("'.$blacklist.'")');
+        if (is_array($blacklist)) {
+            $carts->andWhere(['not in', 'email', $blacklist]);
         }
         $carts->orderBy('commerce_orders.dateUpdated desc');
         $carts->all();
@@ -284,7 +287,7 @@ class Carts extends Component
 
         $checkoutLink = 'abandoned-cart-restore?number=' . $order->number;
 
-        $discount = AbandonedCart::$plugin->getSettings()->discountCode;
+        $discount = Craft::parseEnv(AbandonedCart::$plugin->getSettings()->discountCode);
         if ($discount) {
             $discountCode = $discount;
             $checkoutLink = $checkoutLink . '&couponCode=' . $discountCode;

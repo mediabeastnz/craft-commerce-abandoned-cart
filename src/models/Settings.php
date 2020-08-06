@@ -8,6 +8,7 @@ namespace mediabeastnz\abandonedcart\models;
 
 use craft\base\Model;
 use craft\helpers\StringHelper;
+use craft\behaviors\EnvAttributeParserBehavior;
 
 class Settings extends Model
 {
@@ -44,6 +45,93 @@ class Settings extends Model
         if (empty($this->passKey)) {
             $this->passKey = StringHelper::randomString(15);
         }
+    }
+
+    public function getTestMode(): string
+    {
+        return Craft::parseEnv($this->testMode);
+    }
+
+    public function getPassKey(): string
+    {
+        return Craft::parseEnv($this->passKey);
+    }
+
+    public function getPluginName(): string
+    {
+        return Craft::parseEnv($this->pluginName);
+    }
+
+    public function getDisableSecondReminder(): string
+    {
+        return Craft::parseEnv($this->disableSecondReminder);
+    }
+
+    public function getRestoreExpiryHours(): string
+    {
+        return Craft::parseEnv($this->restoreExpiryHours);
+    }
+
+    public function getFirstReminderDelay(): string
+    {
+        return Craft::parseEnv($this->firstReminderDelay);
+    }
+
+    public function getSecondReminderDelay(): string
+    {
+        return Craft::parseEnv($this->secondReminderDelay);
+    }
+
+    public function getFirstReminderTemplate(): string
+    {
+        return Craft::parseEnv($this->firstReminderTemplate);
+    }
+
+    public function getFirstReminderSubject(): string
+    {
+        return Craft::parseEnv($this->firstReminderSubject);
+    }
+
+    public function getSecondReminderTemplate(): string
+    {
+        return Craft::parseEnv($this->secondReminderTemplate);
+    }
+
+    public function getSecondReminderSubject(): string
+    {
+        return Craft::parseEnv($this->secondReminderSubject);
+    }
+
+    public function getDiscountCode(): string
+    {
+        return Craft::parseEnv($this->discountCode);
+    }
+
+    public function getRecoveryUrl(): string
+    {
+        return Craft::parseEnv($this->recoveryUrl);
+    }
+
+    public function getBlacklist(): string
+    {
+        return Craft::parseEnv($this->blacklist);
+    }
+
+    public function behaviors()
+    {
+        return [
+            'parser' => [
+                'class' => EnvAttributeParserBehavior::class,
+                'attributes' => [
+                    'passKey',
+                    'restoreExpiryHours',
+                    'firstReminderDelay',
+                    'secondReminderDelay',
+                    'firstReminderTemplate',
+                    'firstReminderSubject',
+                ],
+            ],
+        ];
     }
 
     public function rules()

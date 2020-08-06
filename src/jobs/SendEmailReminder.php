@@ -42,11 +42,11 @@ class SendEmailReminder extends BaseJob
               
             $cart = AbandonedCart::$plugin->carts->getAbandonedCartById($this->cartId);
 
-            $firstTemplate = AbandonedCart::$plugin->getSettings()->firstReminderTemplate;
-            $secondTemplate = AbandonedCart::$plugin->getSettings()->secondReminderTemplate;
-            $firstSubject = AbandonedCart::$plugin->getSettings()->firstReminderSubject;
-            $secondSubject = AbandonedCart::$plugin->getSettings()->secondReminderSubject;
-            $secondReminderDisabled = AbandonedCart::$plugin->getSettings()->disableSecondReminder;
+            $firstTemplate = Craft::parseEnv(AbandonedCart::$plugin->getSettings()->firstReminderTemplate);
+            $secondTemplate = Craft::parseEnv(AbandonedCart::$plugin->getSettings()->secondReminderTemplate);
+            $firstSubject = Craft::parseEnv(AbandonedCart::$plugin->getSettings()->firstReminderSubject);
+            $secondSubject = Craft::parseEnv(AbandonedCart::$plugin->getSettings()->secondReminderSubject);
+            $secondReminderDisabled = Craft::parseEnv(AbandonedCart::$plugin->getSettings()->disableSecondReminder);
             
             if ($cart && $cart->isRecovered == 0) {
                 

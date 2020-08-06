@@ -9,6 +9,7 @@ namespace mediabeastnz\abandonedcart\models;
 use mediabeastnz\abandonedcart\AbandonedCart as Plugin;
 use mediabeastnz\abandonedcart\records\AbandonedCart as CartRecord;
 
+use Craft;
 use craft\base\Model;
 use craft\validators\HandleValidator;
 use craft\commerce\records\Order;
@@ -85,7 +86,7 @@ class AbandonedCart extends Model
         } elseif ($this->isRecovered) {
             return "Recovered";
         } else {
-            $expiry = Plugin::$plugin->getSettings()->restoreExpiryHours;
+            $expiry = Craft::parseEnv(Plugin::$plugin->settings->restoreExpiryHours);
             $expiredTime = $this->dateUpdated;
             $expiredTime->add(new \DateInterval("PT{$expiry}H"));
             $expiredTimestamp = $expiredTime->getTimestamp();
