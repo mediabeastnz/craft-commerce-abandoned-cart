@@ -1,5 +1,9 @@
 # Release Notes for Abandoned Cart
 
+## 1.6.0 - 2020-04-08
+### Added
+- Added support for environmental settings.
+
 ## 1.5.4 - 2020-08-06
 ### Fixed
 - Fixed an issue relating to blacklisting emails
