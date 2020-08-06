@@ -1,6 +1,10 @@
 # Release Notes for Abandoned Cart
 
-## 1.6.0 - 2020-04-08
+## 1.6.1 - 2020-08-07
+### Fixed
+- Merged pull request to resolve spelling mistakes
+
+## 1.6.0 - 2020-08-06
 ### Added
 - Added support for environmental settings.
 
