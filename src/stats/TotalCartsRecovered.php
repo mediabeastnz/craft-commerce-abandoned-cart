@@ -29,7 +29,7 @@ class TotalCartsRecovered extends Stat
     {
         // get all orders in date range
         $query = $this->_createStatQuery();
-        $query->select('id');
+        $query->select('orders.id');
         $ids = $query->column();
 
         // get all recovered carts based on ids from above
