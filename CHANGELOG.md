@@ -1,5 +1,9 @@
 # Release Notes for Abandoned Cart
 
+## 1.6.2 - 2020-10-02
+### Fixed
+- Merged pull request that fixes a dashboard widget error
+
 ## 1.6.1 - 2020-08-07
 ### Fixed
 - Merged pull request to resolve spelling mistakes
