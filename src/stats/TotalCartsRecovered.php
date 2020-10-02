@@ -29,7 +29,7 @@ class TotalCartsRecovered extends Stat
     {
         // get all orders in date range
         $query = $this->_createStatQuery();
-        $query->select('id');
+        $query->select('orders.id');
         $ids = $query->column();
 
         // get all recovered carts based on ids from above
@@ -42,7 +42,7 @@ class TotalCartsRecovered extends Stat
         // get all orders that are recovered
         $query2 = $this->_createStatQuery();
         $query2->select('SUM(totalPrice) as total');
-        $query2->andWhere(['id' => $cartIds]);
+        $query2->andWhere(['orders.id' => $cartIds]);
         $total = $query2->scalar();
 
         return $total;
