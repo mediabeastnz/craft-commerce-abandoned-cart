@@ -33,14 +33,15 @@ class BaseController extends Controller
 
     public function actionSettings()
     {
-        $this->requireAdmin();
-
-        $settings = AbandonedCart::$plugin->getSettings();
-
-        return $this->renderTemplate('abandoned-cart/settings', array(
-            'title' => 'Settings',
-            'settings' => $settings,
-        ));
+        if (Craft::$app->getUser()->checkPermission('abandoned-cart-manageAbandonedCartsSettings')) {
+            $settings = AbandonedCart::$plugin->getSettings();
+            return $this->renderTemplate('abandoned-cart/settings', array(
+                'title' => 'Settings',
+                'settings' => $settings,
+            ));
+        } else {
+            throw new ForbiddenHttpException('User is not authorized to perform this action');
+        }
     }
 
     public function actionIndex()
