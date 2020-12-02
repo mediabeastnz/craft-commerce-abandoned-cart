@@ -23,6 +23,8 @@ use craft\commerce\elements\Order;
 use craft\events\RegisterUrlRulesEvent;
 use craft\web\twig\variables\CraftVariable;
 use craft\events\RegisterComponentTypesEvent;
+use craft\services\UserPermissions;
+use craft\events\RegisterUserPermissionsEvent;
 
 use yii\base\Event;
 
@@ -85,6 +87,12 @@ class AbandonedCart extends Plugin
         Event::on(Dashboard::class, Dashboard::EVENT_REGISTER_WIDGET_TYPES, function(RegisterComponentTypesEvent $event) {
             $event->types[] = TotalCartsRecovered::class;
         });
+        
+        Event::on(UserPermissions::class, UserPermissions::EVENT_REGISTER_PERMISSIONS, function(RegisterUserPermissionsEvent $event) {
+            $event->permissions[Craft::t('abandoned-cart', 'Abandoned Carts')] = [
+                'abandoned-cart-manageAbandonedCartsSettings' => ['label' => Craft::t('abandoned-cart', 'Manage abandoned cart settings')],
+            ];
+        });
 
         Craft::info(
             Craft::t(
@@ -118,10 +126,13 @@ class AbandonedCart extends Plugin
                 'url' => 'abandoned-cart/dashboard'
             ];
 
-            $navItem['subnav']['settings'] = [
-                'label' => Craft::t('app', 'Settings'),
-                'url' => 'abandoned-cart/settings'
-            ];
+            if (Craft::$app->getUser()->checkPermission('commerce-manageStoreSettings')) {
+                $navItem['subnav']['settings'] = [
+                    'label' => Craft::t('app', 'Settings'),
+                    'url' => 'abandoned-cart/settings'
+                ];
+            }
+            
             return $navItem;
         }
 
