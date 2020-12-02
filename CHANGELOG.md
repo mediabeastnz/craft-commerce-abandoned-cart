@@ -1,5 +1,9 @@
 # Release Notes for Abandoned Cart
 
+## 1.6.3 - 2020-12-02
+### Added
+- Added user permissions for settings area. Ensure any "non admins" have the appropiate access after updating.
+
 ## 1.6.2 - 2020-10-02
 ### Fixed
 - Merged pull request that fixes a dashboard widget error
