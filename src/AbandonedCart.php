@@ -126,7 +126,7 @@ class AbandonedCart extends Plugin
                 'url' => 'abandoned-cart/dashboard'
             ];
 
-            if (Craft::$app->getUser()->checkPermission('commerce-manageStoreSettings')) {
+            if (Craft::$app->getUser()->checkPermission('abandoned-cart-manageAbandonedCartsSettings')) {
                 $navItem['subnav']['settings'] = [
                     'label' => Craft::t('app', 'Settings'),
                     'url' => 'abandoned-cart/settings'
