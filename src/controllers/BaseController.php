@@ -25,7 +25,7 @@ class BaseController extends Controller
 {
 
     protected $allowAnonymous = [
-        'restore-cart'
+        'restore-cart', 'find-carts'
     ];
 
     // Public Methods
