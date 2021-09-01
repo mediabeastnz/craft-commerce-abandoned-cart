@@ -146,7 +146,7 @@ class Carts extends Component
 
         $carts = Order::find();
         $carts->where(['<=', 'commerce_orders.dateUpdated', $dateUpdatedStart->format('Y-m-d H:i:s')]);
-        $carts->andWhere(['>=', 'commerce_orders.dateUpdated', $dateUpdatedEnd->format('Y-m-d H:i:s')]);        
+        $carts->andWhere(['>=', 'commerce_orders.dateUpdated', $dateUpdatedEnd->format('Y-m-d H:i:s')]);
         $carts->andWhere('totalPrice > 0');
         $carts->andWhere('isCompleted = 0');
         $carts->andWhere('email != ""');
@@ -285,6 +285,9 @@ class Carts extends Component
             return false;
         }
 
+        // use order language
+        Craft::$app->language = $order->orderLanguage;
+
         $checkoutLink = 'abandoned-cart-restore?number=' . $order->number;
 
         $discount = Craft::parseEnv(AbandonedCart::$plugin->getSettings()->discountCode);
@@ -299,9 +302,11 @@ class Carts extends Component
         $renderVariables = [
             'order' => $order,
             'discount' => $discountCode,
+            'currentSite' => $order->orderSite,
             'checkoutLink' => $checkoutLink
         ];
 
+        $subject = $view->renderString($subject, $renderVariables);
         $templatePath = $view->renderString($templatePath, $renderVariables);
 
         // validate that the email template exists
