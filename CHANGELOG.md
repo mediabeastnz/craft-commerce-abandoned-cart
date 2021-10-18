@@ -1,5 +1,9 @@
 # Release Notes for Abandoned Cart
 
+## 1.6.4 - 2021-10-19
+### Added
+- Added multi-site to email templates (Thanks @billmn for the PR).
+
 ## 1.6.3 - 2020-12-02
 ### Added
 - Added user permissions for settings area. Ensure any "non admins" have the appropiate access after updating.
