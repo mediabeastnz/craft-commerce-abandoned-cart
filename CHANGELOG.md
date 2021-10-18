@@ -3,6 +3,7 @@
 ## 1.6.4 - 2021-10-19
 ### Added
 - Added multi-site to email templates (Thanks @billmn for the PR).
+- `find-carts` route can be triggered without being logged in (still requires passKey)  
 
 ## 1.6.3 - 2020-12-02
 ### Added
