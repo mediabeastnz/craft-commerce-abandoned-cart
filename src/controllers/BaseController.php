@@ -52,7 +52,7 @@ class BaseController extends Controller
             'pageSize' => 20,
             'currentPage' => \Craft::$app->request->pageNum,
         ]);
-        
+
         $pageResults = $paginator->getPageResults();
         if($pageResults && count($pageResults)) {
             $carts = [];
@@ -93,7 +93,7 @@ class BaseController extends Controller
                 'totalCartsRecovered' => AbandonedCart::$plugin->carts->getAbandonedCartsRecoveredCount(),
                 'passKey' => Craft::parseEnv(AbandonedCart::$plugin->getSettings()->passKey)
             ]);
-        }  
+        }
     }
 
     public function actionFindCarts()
@@ -194,10 +194,10 @@ class BaseController extends Controller
         // find the order
         $number = $request->getParam('number');
         $order = Order::find()->number($number)->one();
-        
+
         // get custom restore url
         $recoveryUrl = Craft::parseEnv(AbandonedCart::$plugin->getSettings()->recoveryUrl);
-        
+
         if ($order && !$order->isCompleted){
 
             // check if abandoned cart expiry time is valid
@@ -215,10 +215,10 @@ class BaseController extends Controller
 
                 // if time hasn't expired - yay
                 if ($nowTimestamp < $expiredTimestamp) {
-        
+
                     \craft\commerce\Plugin::getInstance()->getCarts()->forgetCart();
                     $session->set('commerce_cart', $number);
-                    $session->setNotice('Your cart has been restored');
+                    $session->setNotice(Craft::t('abandoned-cart', 'Your cart has been restored'));
 
                     // mark abandoned cart as being clicked/actioned but not completed yet.
                     $abandonedCartRecord->clicked = true;
@@ -278,7 +278,7 @@ class BaseController extends Controller
                         }
                     }
                 }
-                
+
             }
         }
 
