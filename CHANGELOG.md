@@ -1,5 +1,9 @@
 # Release Notes for Abandoned Cart
 
+## 1.6.5 - 2022-07-11
+### Fixed
+- Cart restore message can now be translated / supports multi-sites
+
 ## 1.6.4 - 2021-10-19
 ### Added
 - Added multi-site to email templates (Thanks @billmn for the PR).
