@@ -9,13 +9,15 @@
 {% set pluginCpUrl = url('abandoned-cart') %}
 
 {% block actionButton %}
+    {% if testMode %}
     <div id="button-container" class="centeralign">
         <div class="btngroup submit">
-            <a class="btn submit" href="{{ url('/actions/abandoned-cart/base/find-carts', 'passkey=' ~ passKey) }}">
+            <a class="btn submit" href="{{ cpUrl(siteUrl ~ 'actions/abandoned-cart/base/find-carts', 'passkey=' ~ passKey) }}">
                 {{ 'Find Abandoned Carts' | t('app') }}
             </a>
         </div>
     </div>
+    {% endif %}
 {% endblock %}
 
 {# The content of the CP Section#}

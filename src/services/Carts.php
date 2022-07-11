@@ -327,7 +327,7 @@ class Carts extends Component
         $settings = Craft::$app->projectConfig->get('email');
 
         // build the email
-        $newEmail = new Message();
+        $newEmail = Craft::$app->getMailer()->compose();
         $newEmail->setFrom([Craft::parseEnv($settings['fromEmail']) => Craft::parseEnv($settings['fromName'])]);
         $newEmail->setTo($recipient);
         $newEmail->setSubject($subject);
@@ -335,7 +335,7 @@ class Carts extends Component
 
         // attempt to send
         try {
-            if (!Craft::$app->getMailer()->send($newEmail)) {
+            if (!$newEmail->send()) {
                 $error = Craft::t('app', 'Abandoned cart email “{email}” could not be sent for order “{order}”.', [
                     'order' => $order->id
                 ]);
@@ -407,9 +407,18 @@ class Carts extends Component
      */
     private function _createAbandonedCartsQuery(): Query
     {
+        // don't get carts the might be sent to blacklisted
+        $blacklist = Craft::parseEnv(AbandonedCart::$plugin->getSettings()->blacklist);
+        if (!empty($blacklist)) {
+            $blacklist = explode(',', $blacklist);
+        } else {
+            $blacklist = [];
+        }
+
         return (new Query())
             ->select('*')
             ->from(['{{%abandonedcart_carts}}'])
+            ->where(['not in', 'email', $blacklist])
             ->orderBy('dateUpdated desc');
     }
 
