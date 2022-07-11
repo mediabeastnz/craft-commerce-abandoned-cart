@@ -324,7 +324,7 @@ class Carts extends Component
         $emailBody = $view->renderTemplate($templatePath, $renderVariables);
 
         // Get from address from site settings
-        $settings = Craft::$app->systemSettings->getSettings('email');
+        $settings = Craft::$app->projectConfig->get('email');
 
         // build the email
         $newEmail = new Message();

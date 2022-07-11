@@ -27,7 +27,7 @@ class RemindersController extends Controller
 
     // Properties
     // =========================================================================
-    
+
     public $defaultAction = 'scheduleEmails';
 
     // Public Methods

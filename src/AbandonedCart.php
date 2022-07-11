@@ -32,7 +32,8 @@ use yii\base\Event;
 class AbandonedCart extends Plugin
 {
 
-    public $hasCpSettings = true;
+    public bool $hasCpSettings = true;
+    public bool $hasCpSection = true;
 
     public static $plugin;
 
@@ -87,12 +88,22 @@ class AbandonedCart extends Plugin
         Event::on(Dashboard::class, Dashboard::EVENT_REGISTER_WIDGET_TYPES, function(RegisterComponentTypesEvent $event) {
             $event->types[] = TotalCartsRecovered::class;
         });
-        
-        Event::on(UserPermissions::class, UserPermissions::EVENT_REGISTER_PERMISSIONS, function(RegisterUserPermissionsEvent $event) {
-            $event->permissions[Craft::t('abandoned-cart', 'Abandoned Carts')] = [
-                'abandoned-cart-manageAbandonedCartsSettings' => ['label' => Craft::t('abandoned-cart', 'Manage abandoned cart settings')],
-            ];
-        });
+
+        Event::on(
+            UserPermissions::class,
+            UserPermissions::EVENT_REGISTER_PERMISSIONS,
+            function (RegisterUserPermissionsEvent $event) {
+                $event->permissions[] = [
+                    'heading' => Craft::t('abandoned-cart', 'Abandoned Carts'),
+                    'permissions' => [
+                        'abandoned-cart-manageAbandonedCartsSettings' => [
+                            'label' => Craft::t('abandoned-cart', 'Manage abandoned cart settings'),
+                        ],
+                    ],
+                ];
+            }
+        );
+
 
         Craft::info(
             Craft::t(
@@ -109,12 +120,13 @@ class AbandonedCart extends Plugin
         return Craft::t('abandoned-cart', $this->getSettings()->pluginName);
     }
 
-    public function getSettingsResponse()
+    public function getSettingsResponse(): mixed
     {
-        Craft::$app->getResponse()->redirect(UrlHelper::cpUrl('abandoned-cart/settings'));
+        $url = \craft\helpers\UrlHelper::cpUrl('abandoned-cart/settings');
+        return \Craft::$app->controller->redirect($url);
     }
 
-    public function getCpNavItem()
+    public function getCpNavItem(): ?array
     {
         $navItem = parent::getCpNavItem();
         $navItem['label'] = $this->getPluginName();
@@ -141,12 +153,12 @@ class AbandonedCart extends Plugin
         return $navItem;
     }
 
-    protected function createSettingsModel(): Settings
+    protected function createSettingsModel(): ?\craft\base\Model
     {
         return new Settings();
     }
 
-    protected function settingsHtml()
+    protected function settingsHtml(): ?string
     {
         return \Craft::$app->getView()->renderTemplate('abandoned-cart/settings', [
             'settings' => $this->getSettings()

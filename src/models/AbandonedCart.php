@@ -45,7 +45,7 @@ class AbandonedCart extends Model
     // Public Methods
     // =========================================================================
 
-    public function rules()
+    public function rules(): array
     {
         return [
             [['id', 'orderId'], 'number', 'integerOnly' => true],

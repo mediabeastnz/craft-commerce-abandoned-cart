@@ -15,17 +15,17 @@ class TotalCartsRecovered extends Stat
     /**
      * @inheritdoc
      */
-    protected $_handle = 'totalCartsRecovered';
+    protected string $_handle = 'totalCartsRecovered';
 
     /**
      * @inheritdoc
      */
-    public $cache = false;
+    public bool $cache = false;
 
     /**
      * @inheritDoc
      */
-    public function getData()
+    public function getData(): mixed
     {
         // get all orders in date range
         $query = $this->_createStatQuery();

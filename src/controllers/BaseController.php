@@ -24,7 +24,7 @@ use yii\web\Response;
 class BaseController extends Controller
 {
 
-    protected $allowAnonymous = [
+    protected array|int|bool $allowAnonymous = [
         'restore-cart', 'find-carts'
     ];
 
@@ -182,7 +182,7 @@ class BaseController extends Controller
         }
 
         // throw a 403 error as access is not allowed.
-        throw new ForbiddenHttpException('User is not authorized to perform this action');
+        throw new ForbiddenHttpException('User is not authorized to perform this action, or key mismatch from settings.');
     }
 
     // TODO: move logic to service

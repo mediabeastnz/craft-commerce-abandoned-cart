@@ -87,8 +87,8 @@
                             <a class="nav-anchor" href="{{ url('commerce/orders/' ~ cart.order.id) }}">{{ cart.order.number[:7] }}</a>
                         </td>
                         <td scope="row" data-title="{{ 'Customer' | t('app') }}" class="">
-                            {% if cart.order.customer.userId|length %}
-                                <a class="nav-anchor" href="{{ url('users/' ~ cart.order.customer.id ~ '#customerInfo') }}">{{ cart.email }}</a>
+                            {% if cart.order.customerId|length %}
+                                <a class="nav-anchor" href="{{ url('users/' ~ cart.order.customerId ~ '#customerInfo') }}">{{ cart.email }}</a>
                             {% else %}
                                 {{ cart.email }}
                             {% endif %}

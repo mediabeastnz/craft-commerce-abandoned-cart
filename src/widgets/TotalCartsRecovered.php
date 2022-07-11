@@ -38,7 +38,7 @@ class TotalCartsRecovered extends Widget
     /**
      * @inheritDoc
      */
-    public function init()
+    public function init(): void
     {
         parent::init();
 
@@ -64,13 +64,13 @@ class TotalCartsRecovered extends Widget
      */
     public static function displayName(): string
     {
-        return Plugin::t( 'Abandoned Carts Total');
+        return Craft::t('abandoned-cart', 'Abandoned Carts Total');
     }
 
     /**
      * @inheritdoc
      */
-    public static function icon(): string
+    public static function icon(): ?string
     {
         return Craft::getAlias('@craft/commerce/icon-mask.svg');
     }
@@ -78,7 +78,7 @@ class TotalCartsRecovered extends Widget
     /**
      * @inheritdoc
      */
-    public function getTitle(): string
+    public function getTitle(): ?string
     {
         return '';
     }
@@ -86,7 +86,7 @@ class TotalCartsRecovered extends Widget
     /**
      * @inheritdoc
      */
-    public function getBodyHtml()
+    public function getBodyHtml(): ?string
     {
         $number = $this->_stat->get();
         $timeFrame = $this->_stat->getDateRangeWording();
@@ -100,7 +100,7 @@ class TotalCartsRecovered extends Widget
     /**
      * @inheritDoc
      */
-    public static function maxColspan()
+    public static function maxColspan(): ?int
     {
         return 1;
     }
@@ -108,7 +108,7 @@ class TotalCartsRecovered extends Widget
     /**
      * @inheritdoc
      */
-    public function getSettingsHtml(): string
+    public function getSettingsHtml(): ?string
     {
         $id = 'total-carts-recovered' . StringHelper::randomString();
         $namespaceId = Craft::$app->getView()->namespaceInputId($id);

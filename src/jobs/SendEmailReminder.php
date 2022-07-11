@@ -26,7 +26,7 @@ class SendEmailReminder extends BaseJob
      */
     public $reminder;
 
-    protected function defaultDescription()
+    protected function defaultDescription(): ?string
     {
         return Craft::t('abandoned-cart', 'Send abandoned cart reminder');
     }
@@ -35,7 +35,7 @@ class SendEmailReminder extends BaseJob
     // Public Methods
     // =========================================================================
 
-    public function execute($queue)
+    public function execute($queue): void
     {
         $totalSteps = 1;
         for ($step = 0; $step < $totalSteps; $step++) { 

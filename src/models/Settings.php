@@ -117,7 +117,7 @@ class Settings extends Model
         return Craft::parseEnv($this->blacklist);
     }
 
-    public function behaviors()
+    public function behaviors(): array
     {
         return [
             'parser' => [
@@ -134,7 +134,7 @@ class Settings extends Model
         ];
     }
 
-    public function rules()
+    public function rules(): array
     {
         return [
             [[
