@@ -1,5 +1,9 @@
 # Release Notes for Abandoned Cart
 
+## 2.0.0 - 2022-07-11
+### Added
+- Support for Craft & Commerce 4
+
 ## 1.6.5 - 2022-07-11
 ### Fixed
 - Cart restore message can now be translated / supports multi-sites
