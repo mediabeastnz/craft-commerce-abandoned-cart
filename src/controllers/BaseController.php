@@ -112,6 +112,7 @@ class BaseController extends Controller
 
         // check if passkey in url matches settings
         $proceed = $passkeyFromRequest == $passKey;
+        $url = UrlHelper::cpUrl('abandoned-cart');
 
         if ($proceed) {
 
@@ -165,7 +166,7 @@ class BaseController extends Controller
                 }
 
                 Craft::$app->getSession()->setNotice(Craft::t('app', $totalCarts . ' abandoned carts emails were sent'));
-                return $this->redirect(Craft::$app->getRequest()->referrer);
+                return Craft::$app->controller->redirect($url);
             }
 
             // send abandoned carts to queue as per normal
@@ -178,7 +179,7 @@ class BaseController extends Controller
             }
 
             Craft::$app->getSession()->setNotice(Craft::t('app', $abandonedCarts . ' abandoned carts were queued'));
-            return $this->redirect(Craft::$app->getRequest()->referrer);
+            return Craft::$app->controller->redirect($url);
         }
 
         // throw a 403 error as access is not allowed.
