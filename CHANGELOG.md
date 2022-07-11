@@ -1,5 +1,11 @@
 # Release Notes for Abandoned Cart
 
+## 2.0.1 - 2022-07-11
+### Fixed
+- Find carts button is now only visible when in Test mode
+- replaced `new Message()` with `mailer->compose()` to support custom mailers
+- blacklist is now utilized better
+
 ## 2.0.0 - 2022-07-11
 ### Added
 - Support for Craft & Commerce 4
