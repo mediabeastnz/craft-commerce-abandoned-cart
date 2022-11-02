@@ -1,6 +1,7 @@
 <?php
 namespace mediabeastnz\abandonedcart\widgets;
 
+use craft\commerce\base\StatWidgetTrait;
 use mediabeastnz\abandonedcart\stats\TotalCartsRecovered as TotalCartsRecoveredStat;
 
 use Craft;
@@ -15,20 +16,7 @@ use craft\helpers\StringHelper;
  */
 class TotalCartsRecovered extends Widget
 {
-    /**
-     * @var int|\DateTime|null
-     */
-    public $startDate;
-
-    /**
-     * @var int|\DateTime|null
-     */
-    public $endDate;
-
-    /**
-     * @var string|null
-     */
-    public $dateRange;
+    use StatWidgetTrait;
 
     /**
      * @var null|AverageOrderTotalStat
@@ -117,6 +105,7 @@ class TotalCartsRecovered extends Widget
             'id' => $id,
             'namespaceId' => $namespaceId,
             'widget' => $this,
+            'orderStatuses' => $this->getOrderStatusOptions(),
         ]);
     }
 }
