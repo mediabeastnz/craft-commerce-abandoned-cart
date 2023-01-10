@@ -1,5 +1,9 @@
 # Release Notes for Abandoned Cart
 
+## 2.0.2 - 2023-01-11
+### Fixed
+- CP Widget error on Commerce 4.2 (thanks @jerome2710)
+
 ## 2.0.1 - 2022-07-11
 ### Fixed
 - Find carts button is now only visible when in Test mode
