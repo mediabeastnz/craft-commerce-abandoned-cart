@@ -1,5 +1,10 @@
 # Release Notes for Abandoned Cart
 
+## 2.0.3 - 2023-02-22
+### Fixed
+- Ading missing translation on cart error
+- Fixed export for missing purchasables
+
 ## 2.0.2 - 2023-01-11
 ### Fixed
 - CP Widget error on Commerce 4.2 (thanks @jerome2710)
