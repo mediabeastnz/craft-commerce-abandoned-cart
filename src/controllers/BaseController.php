@@ -268,9 +268,9 @@ class BaseController extends Controller
                         if ($order->lineItems) {
                             foreach ($order->lineItems as $item) {
                                 $results[$cart->id]['order']['items'][$item->purchasableId] = [
-                                    "title" => $item->purchasable->title,
+                                    "title" => isset($item->purchasable->title) ? $item->purchasable->title : "-",
                                     "sku" => $item->sku,
-                                    "purchasableId" => $item->purchasableId,
+                                    "purchasableId" => isset($item->purchasableId) ? $item->purchasableId : "-",
                                     "total" => $item->total,
                                     "qty" => $item->qty
                                 ];
