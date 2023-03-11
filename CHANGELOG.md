@@ -1,5 +1,9 @@
 # Release Notes for Abandoned Cart
 
+## 1.6.6 - 2023-03-12
+### Fixed
+- Fix for missing purchasables
+
 ## 1.6.5 - 2022-07-11
 ### Fixed
 - Cart restore message can now be translated / supports multi-sites
