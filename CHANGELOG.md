@@ -1,5 +1,9 @@
 # Release Notes for Abandoned Cart
 
+## 1.6.7 - 2023-03-16
+### Fixed
+- Fix for missing translation
+
 ## 1.6.6 - 2023-03-12
 ### Fixed
 - Fix for missing purchasables
