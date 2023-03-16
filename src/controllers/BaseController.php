@@ -234,7 +234,7 @@ class BaseController extends Controller
 
         }
 
-        $session->setNotice("Your cart couldn't be restored, it may have expired.");
+        $session->setNotice(Craft::t('abandoned-cart', "Your cart couldn't be restored, it may have expired."));
         if($recoveryUrl) {
             return $this->redirect($recoveryUrl);
         }
