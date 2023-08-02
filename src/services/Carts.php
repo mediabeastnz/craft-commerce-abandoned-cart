@@ -285,6 +285,14 @@ class Carts extends Component
             return false;
         }
 
+        if (!$order->hasLineItems()) {
+            $warning = Craft::t('app', 'Skipped Abandoned Cart email, Order doesn\'t have Line Items.');
+            Craft::warning($warning, __METHOD__);
+            Craft::$app->language = $originalLanguage;
+            $view->setTemplateMode($oldTemplateMode);
+            return false;
+        }
+        
         // use order language
         Craft::$app->language = $order->orderLanguage;
 
