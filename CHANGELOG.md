@@ -1,5 +1,9 @@
 # Release Notes for Abandoned Cart
 
+## 2.0.4 - 2023-08-31
+### Fixed
+- Merged PR that resolves empty carts sending emails
+
 ## 2.0.3 - 2023-02-22
 ### Fixed
 - Ading missing translation on cart error
