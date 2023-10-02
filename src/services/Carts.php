@@ -6,6 +6,7 @@
 
 namespace mediabeastnz\abandonedcart\services;
 
+use mediabeastnz\abandonedcart\events\BeforeMailSend;
 use mediabeastnz\abandonedcart\records\AbandonedCart as CartRecord;
 use mediabeastnz\abandonedcart\models\AbandonedCart as CartModel;
 use mediabeastnz\abandonedcart\jobs\SendEmailReminder;
@@ -22,6 +23,8 @@ use yii\base\Component;
 
 class Carts extends Component
 {
+
+    const EVENT_BEFORE_MAIL_SEND = 'beforeMailSend';
 
     // Public Methods
     // =========================================================================
@@ -341,8 +344,21 @@ class Carts extends Component
         $newEmail->setSubject($subject);
         $newEmail->setHtmlBody($emailBody);
 
+        $event = new BeforeMailSend([
+            'order' => $order,
+            'message' => $newEmail,
+        ]);
+
+        $newEmail = $event->message;
+        $this->trigger(self::EVENT_BEFORE_MAIL_SEND, $event);
+
+        if(!$event->isValid) {
+            return false;
+        }
+
         // attempt to send
         try {
+
             if (!$newEmail->send()) {
                 $error = Craft::t('app', 'Abandoned cart email “{email}” could not be sent for order “{order}”.', [
                     'order' => $order->id
