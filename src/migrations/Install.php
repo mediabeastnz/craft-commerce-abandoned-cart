@@ -49,7 +49,9 @@ class Install extends Migration
 
     public function addForeignKeys()
     {
-        $this->addForeignKey(null, '{{%abandonedcart_carts}}', ['orderId'], '{{%commerce_orders}}', ['id'], 'CASCADE', null);
+        if ($this->_tableExists('{{%commerce_orders}}')) {
+            $this->addForeignKey(null, '{{%abandonedcart_carts}}', ['orderId'], '{{%commerce_orders}}', ['id'], 'CASCADE', null);
+        }
     }
 
     public function dropTables()
