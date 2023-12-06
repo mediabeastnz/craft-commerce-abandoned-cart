@@ -213,7 +213,7 @@ class Carts extends Component
         $ids = $this->_createAbandonedCartsQuery()
             ->select('orderId')
             ->where(['isRecovered' => 1])
-            ->andWhere('MONTH([[dateUpdated]]) = MONTH(CURDATE())')
+            ->andWhere('MONTH([[dateUpdated]]) = MONTH(NOW())')
             ->column();
         if($ids) {
             $orders = Order::find()
