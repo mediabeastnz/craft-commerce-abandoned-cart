@@ -237,7 +237,7 @@ class Carts extends Component
 
     public function getAbandondedCartsConversion()
     {
-        $recovered = $this->_createAbandonedCartsQuery()->where('isRecovered = 1')->count();
+        $recovered = $this->_createAbandonedCartsQuery()->where(['isRecovered' => 1])->count();
         $total = $this->getAbandonedCartsTotal();
         if ($total > 0 && $recovered > 0) {
             $percent = ($recovered / $total) * 100;
