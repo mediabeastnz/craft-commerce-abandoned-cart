@@ -111,7 +111,7 @@ class Carts extends Component
             foreach ($orders as $order) {
                 // check for existing cart first
                 // if none exist - create a new record
-                $existingCart = CartRecord::find()->where(['orderID' => $order->id])->one();
+                $existingCart = CartRecord::find()->where(['orderId' => $order->id])->one();
                 if (!$existingCart) {
                     $newCart = new CartRecord();
                     $newCart->orderId = $order->id;
