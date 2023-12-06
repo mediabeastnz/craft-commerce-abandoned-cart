@@ -51,7 +51,7 @@ class Carts extends Component
     {
         // get all created abandoned carts that havent been completed
         // Completed being: reminders have already been sent
-        $carts = CartRecord::find()->where('isScheduled = 0')->all();
+        $carts = CartRecord::find()->where(['isScheduled' => 0])->all();
 
         $firstDelay = Craft::parseEnv(AbandonedCart::$plugin->getSettings()->firstReminderDelay);
         $secondDelay = Craft::parseEnv(AbandonedCart::$plugin->getSettings()->secondReminderDelay);
@@ -148,9 +148,9 @@ class Carts extends Component
         $carts = Order::find();
         $carts->where(['<=', 'commerce_orders.[[dateUpdated]]', $dateUpdatedStart->format('Y-m-d H:i:s')]);
         $carts->andWhere(['>=', 'commerce_orders.[[dateUpdated]]', $dateUpdatedEnd->format('Y-m-d H:i:s')]);
-        $carts->andWhere('totalPrice > 0');
-        $carts->andWhere('isCompleted = 0');
-        $carts->andWhere('email != ""');
+        $carts->andWhere(['>', 'totalPrice', 0]);
+        $carts->andWhere(['=', 'isCompleted', 0]);
+        $carts->andWhere(['!=', 'email', '']);
         if (is_array($blacklist)) {
             $carts->andWhere(['not in', 'email', $blacklist]);
         }
