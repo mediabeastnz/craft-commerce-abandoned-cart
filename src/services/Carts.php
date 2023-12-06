@@ -145,15 +145,15 @@ class Carts extends Component
         $dateUpdatedEnd->sub(new DateInterval('PT'.$end.'H'));
 
         $carts = Order::find();
-        $carts->where(['<=', 'commerce_orders.dateUpdated', $dateUpdatedStart->format('Y-m-d H:i:s')]);
-        $carts->andWhere(['>=', 'commerce_orders.dateUpdated', $dateUpdatedEnd->format('Y-m-d H:i:s')]);
+        $carts->where(['<=', 'commerce_orders.[[dateUpdated]]', $dateUpdatedStart->format('Y-m-d H:i:s')]);
+        $carts->andWhere(['>=', 'commerce_orders.[[dateUpdated]]', $dateUpdatedEnd->format('Y-m-d H:i:s')]);
         $carts->andWhere('totalPrice > 0');
         $carts->andWhere('isCompleted = 0');
         $carts->andWhere('email != ""');
         if (is_array($blacklist)) {
             $carts->andWhere(['not in', 'email', $blacklist]);
         }
-        $carts->orderBy('commerce_orders.dateUpdated desc');
+        $carts->orderBy('commerce_orders.[[dateUpdated]] desc');
         $carts->all();
         return $carts;
     }
@@ -201,7 +201,7 @@ class Carts extends Component
         if($ids) {
             $orders = Order::find()
                 ->where(['commerce_orders.id' => $ids])
-                ->select('SUM(totalPrice) as total')
+                ->select('SUM([[totalPrice]]) as total')
                 ->column();
             return $orders[0];
         }
@@ -213,12 +213,12 @@ class Carts extends Component
         $ids = $this->_createAbandonedCartsQuery()
             ->select('orderId')
             ->where(['isRecovered' => 1])
-            ->andWhere('MONTH(dateUpdated) = MONTH(CURDATE())')
+            ->andWhere('MONTH([[dateUpdated]]) = MONTH(CURDATE())')
             ->column();
         if($ids) {
             $orders = Order::find()
                 ->where(['commerce_orders.id' => $ids])
-                ->select('SUM(totalPrice) as total')
+                ->select('SUM([[totalPrice]]) as total')
                 ->column();
             return $orders[0];
         }
@@ -427,7 +427,7 @@ class Carts extends Component
             ->select('*')
             ->from(['{{%abandonedcart_carts}}'])
             ->where(['not in', 'email', $blacklist])
-            ->orderBy('dateUpdated desc');
+            ->orderBy('[[dateUpdated]] desc');
     }
 
 }
