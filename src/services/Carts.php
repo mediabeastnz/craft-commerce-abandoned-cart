@@ -19,6 +19,7 @@ use DateInterval;
 use DateTime;
 use DateTimeZone;
 use yii\base\Component;
+use yii\db\Expression;
 
 class Carts extends Component
 {
@@ -201,7 +202,7 @@ class Carts extends Component
         if($ids) {
             $orders = Order::find()
                 ->where(['commerce_orders.id' => $ids])
-                ->select('SUM([[totalPrice]]) as total')
+                ->select(new Expression('SUM([[totalPrice]]) as total'))
                 ->column();
             return $orders[0];
         }
@@ -213,12 +214,12 @@ class Carts extends Component
         $ids = $this->_createAbandonedCartsQuery()
             ->select('orderId')
             ->where(['isRecovered' => 1])
-            ->andWhere('MONTH([[dateUpdated]]) = MONTH(NOW())')
+            ->andWhere(new Expression('EXTRACT(MONTH FROM [[dateUpdated]]) = EXTRACT(MONTH FROM NOW())'))
             ->column();
         if($ids) {
             $orders = Order::find()
                 ->where(['commerce_orders.id' => $ids])
-                ->select('SUM([[totalPrice]]) as total')
+                ->select(new Expression('SUM(totalPrice) as total'))
                 ->column();
             return $orders[0];
         }
