@@ -63,6 +63,21 @@ You can do this by setting up a second cron job which processes any jobs in the 
 */1 * * * *  php craft queue/run
 ```
 
+## Customize mail message trough events
+The mailer implements a `BeforeMailSend` event where you can cancel or change the message that is sent by the plug-in. Usage:
+```php
+use yii\base\Event;
+use mediabeastnz\abandonedcart\events\BeforeMailSend;
+use mediabeastnz\abandonedcart\services\Carts;
+Event::on(
+    Carts::class,
+    Carts::EVENT_BEFORE_MAIL_SEND,
+    function (BeforeMailSend $event) {
+        // implement
+    }
+);
+```
+
 ## Abandoned Cart Roadmap
 
 Some things to look forward to:
