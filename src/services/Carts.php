@@ -20,6 +20,7 @@ use DateInterval;
 use DateTime;
 use DateTimeZone;
 use yii\base\Component;
+use yii\db\Expression;
 
 class Carts extends Component
 {
@@ -53,7 +54,7 @@ class Carts extends Component
     {
         // get all created abandoned carts that havent been completed
         // Completed being: reminders have already been sent
-        $carts = CartRecord::find()->where('isScheduled = 0')->all();
+        $carts = CartRecord::find()->where(['isScheduled' => 0])->all();
 
         $firstDelay = Craft::parseEnv(AbandonedCart::$plugin->getSettings()->firstReminderDelay);
         $secondDelay = Craft::parseEnv(AbandonedCart::$plugin->getSettings()->secondReminderDelay);
@@ -113,7 +114,7 @@ class Carts extends Component
             foreach ($orders as $order) {
                 // check for existing cart first
                 // if none exist - create a new record
-                $existingCart = CartRecord::find()->where(['orderID' => $order->id])->one();
+                $existingCart = CartRecord::find()->where(['orderId' => $order->id])->one();
                 if (!$existingCart) {
                     $newCart = new CartRecord();
                     $newCart->orderId = $order->id;
@@ -148,15 +149,15 @@ class Carts extends Component
         $dateUpdatedEnd->sub(new DateInterval('PT'.$end.'H'));
 
         $carts = Order::find();
-        $carts->where(['<=', 'commerce_orders.dateUpdated', $dateUpdatedStart->format('Y-m-d H:i:s')]);
-        $carts->andWhere(['>=', 'commerce_orders.dateUpdated', $dateUpdatedEnd->format('Y-m-d H:i:s')]);
-        $carts->andWhere('totalPrice > 0');
-        $carts->andWhere('isCompleted = 0');
-        $carts->andWhere('email != ""');
+        $carts->where(['<=', 'commerce_orders.[[dateUpdated]]', $dateUpdatedStart->format('Y-m-d H:i:s')]);
+        $carts->andWhere(['>=', 'commerce_orders.[[dateUpdated]]', $dateUpdatedEnd->format('Y-m-d H:i:s')]);
+        $carts->andWhere(['>', 'totalPrice', 0]);
+        $carts->andWhere(['=', 'isCompleted', 0]);
+        $carts->andWhere(['!=', 'email', '']);
         if (is_array($blacklist)) {
             $carts->andWhere(['not in', 'email', $blacklist]);
         }
-        $carts->orderBy('commerce_orders.dateUpdated desc');
+        $carts->orderBy('commerce_orders.[[dateUpdated]] desc');
         $carts->all();
         return $carts;
     }
@@ -204,7 +205,7 @@ class Carts extends Component
         if($ids) {
             $orders = Order::find()
                 ->where(['commerce_orders.id' => $ids])
-                ->select('SUM(totalPrice) as total')
+                ->select(new Expression('SUM([[totalPrice]]) as total'))
                 ->column();
             return $orders[0];
         }
@@ -216,12 +217,12 @@ class Carts extends Component
         $ids = $this->_createAbandonedCartsQuery()
             ->select('orderId')
             ->where(['isRecovered' => 1])
-            ->andWhere('MONTH(dateUpdated) = MONTH(CURDATE())')
+            ->andWhere(new Expression('EXTRACT(MONTH FROM [[dateUpdated]]) = EXTRACT(MONTH FROM NOW())'))
             ->column();
         if($ids) {
             $orders = Order::find()
                 ->where(['commerce_orders.id' => $ids])
-                ->select('SUM(totalPrice) as total')
+                ->select(new Expression('SUM(totalPrice) as total'))
                 ->column();
             return $orders[0];
         }
@@ -240,7 +241,7 @@ class Carts extends Component
 
     public function getAbandondedCartsConversion()
     {
-        $recovered = $this->_createAbandonedCartsQuery()->where('isRecovered = 1')->count();
+        $recovered = $this->_createAbandonedCartsQuery()->where(['isRecovered' => 1])->count();
         $total = $this->getAbandonedCartsTotal();
         if ($total > 0 && $recovered > 0) {
             $percent = ($recovered / $total) * 100;
@@ -443,7 +444,7 @@ class Carts extends Component
             ->select('*')
             ->from(['{{%abandonedcart_carts}}'])
             ->where(['not in', 'email', $blacklist])
-            ->orderBy('dateUpdated desc');
+            ->orderBy('[[dateUpdated]] desc');
     }
 
 }
