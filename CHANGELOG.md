@@ -1,5 +1,11 @@
 # Release Notes for Abandoned Cart
 
+## 2.0.5 - 2024-01-05
+### Added
+- Added an event to allow for customisation or cancellation of emails
+### Fixed
+- Installation issues + PostgreSQL support
+
 ## 2.0.4 - 2023-08-31
 ### Fixed
 - Merged PR that resolves empty carts sending emails
