@@ -1,5 +1,9 @@
 # Release Notes for Abandoned Cart
 
+## 2.0.6 - 2024-07-18
+### Fixed
+- SQL issue when aggregating total from orders recovered
+
 ## 2.0.5 - 2024-01-05
 ### Added
 - Added an event to allow for customisation or cancellation of emails
