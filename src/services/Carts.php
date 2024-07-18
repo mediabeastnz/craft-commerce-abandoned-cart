@@ -206,6 +206,7 @@ class Carts extends Component
             $orders = Order::find()
                 ->where(['commerce_orders.id' => $ids])
                 ->select(new Expression('SUM([[totalPrice]]) as total'))
+                ->groupBy('[[commerce_orders.id]]')
                 ->column();
             return $orders[0];
         }
@@ -222,7 +223,8 @@ class Carts extends Component
         if($ids) {
             $orders = Order::find()
                 ->where(['commerce_orders.id' => $ids])
-                ->select(new Expression('SUM(totalPrice) as total'))
+                ->select(new Expression('SUM([[totalPrice]]) as total'))
+                ->groupBy('[[commerce_orders.id]]')
                 ->column();
             return $orders[0];
         }
