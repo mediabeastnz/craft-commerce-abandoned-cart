@@ -3,7 +3,7 @@ Abandoned Cart provides a collection of events for extending its functionality. 
 
 ## Cart Events
 
-### The `beforeSaveCart` event
+### The `beforeSaveCart` Event
 The event that is triggered before a cart is saved.
 
 ```php
@@ -18,7 +18,7 @@ Event::on(Carts::class, Carts::EVENT_BEFORE_SAVE_CART, function(CartEvent $event
 });
 ```
 
-### The `afterSaveCart` event
+### The `afterSaveCart` Event
 The event that is triggered after a cart is saved.
 
 ```php
@@ -33,7 +33,7 @@ Event::on(Carts::class, Carts::EVENT_AFTER_SAVE_CART, function(CartEvent $event)
 });
 ```
 
-### The `beforeMailSend` event
+### The `beforeMailSend` Event
 The event that is triggered before an email is sent.
 
 ```php

@@ -1,46 +1,133 @@
 # Configuration
-Create a `abandoned-cart.php` file under your `/config` directory with the following options available to you. You can also use multi-environment options to change these per environment.
 
-The below shows the defaults already used by Abandoned Cart, so you don't need to add these options unless you want to modify the values.
+You can customise Abandoned Cart’s settings using a PHP configuration file. This is optional: each setting has a default, so you only need to include the values you want to change.
+
+To override a setting, create `abandoned-cart.php` in your Craft project’s `/config` directory and return an array of setting names and values. For example, the following will change the name displayed in the control panel:
 
 ```php
 <?php
 
 return [
-    '*' => [
-        'pluginName' => 'Abandoned Cart',
-        'passKey' => null,
-        'restoreExpiryHours' => 48,
-        'firstReminderDelay' => 1,
-        'secondReminderDelay' => 12,
-        'discountCode' => null,
-        'firstReminderTemplate' => 'abandoned-cart/emails/first',
-        'secondReminderTemplate' => 'abandoned-cart/emails/second',
-        'firstReminderSubject' => 'You‘ve left some items in your cart',
-        'secondReminderSubject' => 'Your items are still waiting - don‘t miss out',
-        'recoveryUrl' => 'shop/cart',
-        'disableSecondReminder' => false,
-        'blacklist' => null,
-        'includeBlacklisted' => true,
-    ],
+    'pluginName' => 'Abandoned Cart Tools',
 ];
 ```
 
-## Configuration options
-- `pluginName` - If you wish to customise the plugin name.
-- `passKey` - A generated, unique string to increase security against crons being run inadvertently.
-- `restoreExpiryHours` - How many hours should abandoned cart restore links last for after being sent.
-- `firstReminderDelay` - How many hours after a cart has been abandoned should the 1st reminder be sent.
-- `secondReminderDelay` - How many hours after a cart has been abandoned should the 2nd reminder be sent.
-- `discountCode` - Enter the discount code that abandoned carts can use.
-- `firstReminderTemplate` - Use a custom template for the 1st reminder email.
-- `secondReminderTemplate` - Use a custom template for the 2nd reminder email.
-- `firstReminderSubject` - The subject for the 1st reminder email.
-- `secondReminderSubject` - The subject for the 2nd reminder email.
-- `recoveryUrl` - By default recovered carts will be redirected to shop/cart, use this field if you use something different.
-- `disableSecondReminder` - If disabled only the 1st reminder will be sent.
-- `blacklist` - Enter emails or domains seperated by a comma that should be ignored.
-- `includeBlacklisted` - Whether blacklisted carts should be included in the Dashboard.
+All other settings keep their defaults. Add any further settings you want to change to the same array. The options below explain the available settings and their defaults.
+
+## Configuration Options
+
+::: reference
+### `pluginName`
+
+**Type:** `string` · **Default:** `'Abandoned Carts'`
+
+The name displayed for the plugin in the control panel.
+:::
+
+::: reference
+### `passKey`
+
+**Type:** `string|null` · **Default:** `null`
+
+A generated, unique string to increase security against crons being run inadvertently. A unique key is generated when this value is empty.
+:::
+
+::: reference
+### `restoreExpiryHours`
+
+**Type:** `int|string|null` · **Default:** `48`
+
+How many hours should abandoned cart restore links last for after being sent.
+:::
+
+::: reference
+### `firstReminderDelay`
+
+**Type:** `int|string|null` · **Default:** `1`
+
+How many hours after a cart has been abandoned should the 1st reminder be sent.
+:::
+
+::: reference
+### `secondReminderDelay`
+
+**Type:** `int|string|null` · **Default:** `12`
+
+How many hours after a cart has been abandoned should the 2nd reminder be sent.
+:::
+
+::: reference
+### `discountCode`
+
+**Type:** `string|null` · **Default:** `null`
+
+Enter the discount code that abandoned carts can use.
+:::
+
+::: reference
+### `firstReminderTemplate`
+
+**Type:** `string|null` · **Default:** `'abandoned-cart/emails/first'`
+
+Use a custom template for the 1st reminder email.
+:::
+
+::: reference
+### `secondReminderTemplate`
+
+**Type:** `string|null` · **Default:** `'abandoned-cart/emails/second'`
+
+Use a custom template for the 2nd reminder email.
+:::
+
+::: reference
+### `firstReminderSubject`
+
+**Type:** `string|null` · **Default:** `'You‘ve left some items in your cart'`
+
+The subject for the 1st reminder email.
+:::
+
+::: reference
+### `secondReminderSubject`
+
+**Type:** `string|null` · **Default:** `'Your items are still waiting - don‘t miss out'`
+
+The subject for the 2nd reminder email.
+:::
+
+::: reference
+### `recoveryUrl`
+
+**Type:** `string|null` · **Default:** `'shop/cart'`
+
+By default recovered carts will be redirected to shop/cart, use this field if you use something different.
+:::
+
+::: reference
+### `disableSecondReminder`
+
+**Type:** `bool|string|null` · **Default:** `false`
+
+Whether to disable the second reminder email. Set this to `true` to send only the first reminder.
+:::
+
+::: reference
+### `blacklist`
+
+**Type:** `string|null` · **Default:** `null`
+
+Enter emails or domains separated by a comma that should be ignored.
+:::
+
+::: reference
+### `includeBlacklisted`
+
+**Type:** `bool` · **Default:** `true`
+
+Whether blacklisted carts should be included in the Dashboard.
+:::
+
 
 
 ## Control Panel
